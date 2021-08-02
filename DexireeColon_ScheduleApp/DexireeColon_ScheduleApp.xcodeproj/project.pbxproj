@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,9 +14,18 @@
 		C30A92EC269FBE030024627C /* DexireeColon_ScheduleApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C30A92EA269FBE030024627C /* DexireeColon_ScheduleApp.xcdatamodeld */; };
 		C30A92EE269FBE050024627C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C30A92ED269FBE050024627C /* Assets.xcassets */; };
 		C30A92F1269FBE050024627C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C30A92EF269FBE050024627C /* LaunchScreen.storyboard */; };
+		C30A92F926AB9DDB0024627C /* EmployeeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A92F826AB9DDB0024627C /* EmployeeViewController.swift */; };
+		C30A92FB26AB9E2D0024627C /* EmployerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A92FA26AB9E2D0024627C /* EmployerViewController.swift */; };
+		C30A92FD26B308750024627C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C30A92FC26B308750024627C /* GoogleService-Info.plist */; };
+		C30A92FF26B33ACA0024627C /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A92FE26B33ACA0024627C /* Popup.swift */; };
+		C30A930126B6364B0024627C /* EmployeeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A930026B6364B0024627C /* EmployeeTableViewCell.swift */; };
+		DC49A45718A5F4039E3F3BF9 /* Pods_DexireeColon_ScheduleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC5A3754B6ED717ABEC301F9 /* Pods_DexireeColon_ScheduleApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6C942F9896EA02CA5A53CEAF /* Pods-DexireeColon_ScheduleApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DexireeColon_ScheduleApp.debug.xcconfig"; path = "Target Support Files/Pods-DexireeColon_ScheduleApp/Pods-DexireeColon_ScheduleApp.debug.xcconfig"; sourceTree = "<group>"; };
+		8022F61953B292224E98D827 /* Pods-DexireeColon_ScheduleApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DexireeColon_ScheduleApp.release.xcconfig"; path = "Target Support Files/Pods-DexireeColon_ScheduleApp/Pods-DexireeColon_ScheduleApp.release.xcconfig"; sourceTree = "<group>"; };
+		AC5A3754B6ED717ABEC301F9 /* Pods_DexireeColon_ScheduleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DexireeColon_ScheduleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C30A92DE269FBE030024627C /* DexireeColon_ScheduleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DexireeColon_ScheduleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C30A92E1269FBE030024627C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C30A92E3269FBE030024627C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -26,6 +35,11 @@
 		C30A92ED269FBE050024627C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C30A92F0269FBE050024627C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C30A92F2269FBE050024627C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C30A92F826AB9DDB0024627C /* EmployeeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmployeeViewController.swift; sourceTree = "<group>"; };
+		C30A92FA26AB9E2D0024627C /* EmployerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmployerViewController.swift; sourceTree = "<group>"; };
+		C30A92FC26B308750024627C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C30A92FE26B33ACA0024627C /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
+		C30A930026B6364B0024627C /* EmployeeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmployeeTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,17 +47,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC49A45718A5F4039E3F3BF9 /* Pods_DexireeColon_ScheduleApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C1EF1CD4E7F33BBEDC557F3C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AC5A3754B6ED717ABEC301F9 /* Pods_DexireeColon_ScheduleApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C30A92D5269FBE030024627C = {
 			isa = PBXGroup;
 			children = (
+				C30A930026B6364B0024627C /* EmployeeTableViewCell.swift */,
 				C30A92E0269FBE030024627C /* DexireeColon_ScheduleApp */,
 				C30A92DF269FBE030024627C /* Products */,
+				ECD3CBC37A85DED76F1C95C7 /* Pods */,
+				C1EF1CD4E7F33BBEDC557F3C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,12 +88,25 @@
 				C30A92E3269FBE030024627C /* SceneDelegate.swift */,
 				C30A92E5269FBE030024627C /* ViewController.swift */,
 				C30A92E7269FBE030024627C /* Main.storyboard */,
+				C30A92F826AB9DDB0024627C /* EmployeeViewController.swift */,
+				C30A92FA26AB9E2D0024627C /* EmployerViewController.swift */,
+				C30A92FE26B33ACA0024627C /* Popup.swift */,
 				C30A92ED269FBE050024627C /* Assets.xcassets */,
 				C30A92EF269FBE050024627C /* LaunchScreen.storyboard */,
 				C30A92F2269FBE050024627C /* Info.plist */,
 				C30A92EA269FBE030024627C /* DexireeColon_ScheduleApp.xcdatamodeld */,
+				C30A92FC26B308750024627C /* GoogleService-Info.plist */,
 			);
 			path = DexireeColon_ScheduleApp;
+			sourceTree = "<group>";
+		};
+		ECD3CBC37A85DED76F1C95C7 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6C942F9896EA02CA5A53CEAF /* Pods-DexireeColon_ScheduleApp.debug.xcconfig */,
+				8022F61953B292224E98D827 /* Pods-DexireeColon_ScheduleApp.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -77,9 +116,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C30A92F5269FBE050024627C /* Build configuration list for PBXNativeTarget "DexireeColon_ScheduleApp" */;
 			buildPhases = (
+				D1EF519FF431293F78D685D2 /* [CP] Check Pods Manifest.lock */,
 				C30A92DA269FBE030024627C /* Sources */,
 				C30A92DB269FBE030024627C /* Frameworks */,
 				C30A92DC269FBE030024627C /* Resources */,
+				A94183C29ABC8225BD1F18B5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -128,6 +169,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C30A92F1269FBE050024627C /* LaunchScreen.storyboard in Resources */,
+				C30A92FD26B308750024627C /* GoogleService-Info.plist in Resources */,
 				C30A92EE269FBE050024627C /* Assets.xcassets in Resources */,
 				C30A92E9269FBE030024627C /* Main.storyboard in Resources */,
 			);
@@ -135,15 +177,61 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A94183C29ABC8225BD1F18B5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-DexireeColon_ScheduleApp/Pods-DexireeColon_ScheduleApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-DexireeColon_ScheduleApp/Pods-DexireeColon_ScheduleApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DexireeColon_ScheduleApp/Pods-DexireeColon_ScheduleApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D1EF519FF431293F78D685D2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-DexireeColon_ScheduleApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C30A92DA269FBE030024627C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C30A92FF26B33ACA0024627C /* Popup.swift in Sources */,
+				C30A930126B6364B0024627C /* EmployeeTableViewCell.swift in Sources */,
+				C30A92FB26AB9E2D0024627C /* EmployerViewController.swift in Sources */,
 				C30A92E6269FBE030024627C /* ViewController.swift in Sources */,
 				C30A92E2269FBE030024627C /* AppDelegate.swift in Sources */,
 				C30A92E4269FBE030024627C /* SceneDelegate.swift in Sources */,
 				C30A92EC269FBE030024627C /* DexireeColon_ScheduleApp.xcdatamodeld in Sources */,
+				C30A92F926AB9DDB0024627C /* EmployeeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +375,7 @@
 		};
 		C30A92F6269FBE050024627C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C942F9896EA02CA5A53CEAF /* Pods-DexireeColon_ScheduleApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -306,6 +395,7 @@
 		};
 		C30A92F7269FBE050024627C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8022F61953B292224E98D827 /* Pods-DexireeColon_ScheduleApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
