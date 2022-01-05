@@ -19,6 +19,7 @@
 		C30A92FD26B308750024627C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C30A92FC26B308750024627C /* GoogleService-Info.plist */; };
 		C30A92FF26B33ACA0024627C /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A92FE26B33ACA0024627C /* Popup.swift */; };
 		C30A930126B6364B0024627C /* EmployeeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A930026B6364B0024627C /* EmployeeTableViewCell.swift */; };
+		C3CDCBF926B7A6E200D89A42 /* ScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CDCBF826B7A6E200D89A42 /* ScheduleTableViewCell.swift */; };
 		DC49A45718A5F4039E3F3BF9 /* Pods_DexireeColon_ScheduleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC5A3754B6ED717ABEC301F9 /* Pods_DexireeColon_ScheduleApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		C30A92FC26B308750024627C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C30A92FE26B33ACA0024627C /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 		C30A930026B6364B0024627C /* EmployeeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmployeeTableViewCell.swift; sourceTree = "<group>"; };
+		C3CDCBF826B7A6E200D89A42 /* ScheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 				C30A92E3269FBE030024627C /* SceneDelegate.swift */,
 				C30A92E5269FBE030024627C /* ViewController.swift */,
 				C30A92E7269FBE030024627C /* Main.storyboard */,
+				C3CDCBF826B7A6E200D89A42 /* ScheduleTableViewCell.swift */,
 				C30A92F826AB9DDB0024627C /* EmployeeViewController.swift */,
 				C30A92FA26AB9E2D0024627C /* EmployerViewController.swift */,
 				C30A92FE26B33ACA0024627C /* Popup.swift */,
@@ -232,6 +235,7 @@
 				C30A92E4269FBE030024627C /* SceneDelegate.swift in Sources */,
 				C30A92EC269FBE030024627C /* DexireeColon_ScheduleApp.xcdatamodeld in Sources */,
 				C30A92F926AB9DDB0024627C /* EmployeeViewController.swift in Sources */,
+				C3CDCBF926B7A6E200D89A42 /* ScheduleTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

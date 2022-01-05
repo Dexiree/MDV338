@@ -374,13 +374,54 @@
                                         <rect key="frame" x="0.0" y="604.5" width="414" height="231.5"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="yz6-Rr-3WT">
-                                                <rect key="frame" x="0.0" y="24.5" width="414" height="43.5"/>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="cellId" rowHeight="50" id="yz6-Rr-3WT" customClass="ScheduleTableViewCell" customModule="DexireeColon_ScheduleApp" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="24.5" width="414" height="50"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yz6-Rr-3WT" id="Aoy-Xs-OxD">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="384.5" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="wNc-d0-bSB">
+                                                            <rect key="frame" x="0.0" y="0.0" width="384.5" height="50"/>
+                                                            <subviews>
+                                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Uhc-EI-bXp">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="192.5" height="50"/>
+                                                                    <subviews>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Bj-7K-83h">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="192.5" height="25"/>
+                                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                                            <nil key="textColor"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BMo-OJ-9b9">
+                                                                            <rect key="frame" x="0.0" y="25" width="192.5" height="25"/>
+                                                                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                                                            <nil key="textColor"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
+                                                                    </subviews>
+                                                                </stackView>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="scd-Dy-ae5">
+                                                                    <rect key="frame" x="192.5" y="0.0" width="192" height="50"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="wNc-d0-bSB" firstAttribute="height" secondItem="Aoy-Xs-OxD" secondAttribute="height" id="0mZ-UH-49h"/>
+                                                        <constraint firstItem="wNc-d0-bSB" firstAttribute="width" secondItem="Aoy-Xs-OxD" secondAttribute="width" id="6rU-9p-bqt"/>
+                                                        <constraint firstItem="wNc-d0-bSB" firstAttribute="centerY" secondItem="Aoy-Xs-OxD" secondAttribute="centerY" id="pfi-BC-v2Y"/>
+                                                        <constraint firstItem="wNc-d0-bSB" firstAttribute="centerX" secondItem="Aoy-Xs-OxD" secondAttribute="centerX" id="vUX-cZ-Ayh"/>
+                                                    </constraints>
                                                 </tableViewCellContentView>
+                                                <connections>
+                                                    <outlet property="dayLabel" destination="0Bj-7K-83h" id="gTE-DX-4vf"/>
+                                                    <outlet property="payLabel" destination="scd-Dy-ae5" id="nuU-p0-1or"/>
+                                                    <outlet property="timeLabel" destination="BMo-OJ-9b9" id="Mec-g4-pZs"/>
+                                                </connections>
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
@@ -406,6 +447,7 @@
                         <outlet property="datesLabel" destination="fhT-La-s22" id="s4R-kD-Txj"/>
                         <outlet property="name" destination="dKH-to-5fV" id="KwH-cG-VOh"/>
                         <outlet property="profilePic" destination="0pP-o5-UO2" id="brG-zt-fbx"/>
+                        <outlet property="schedule" destination="8lB-IT-AjX" id="wXv-XW-1ib"/>
                         <outlet property="timeEmployedLabel" destination="acr-Gw-gbP" id="ll5-ik-5pY"/>
                         <outlet property="titleLabel" destination="iWL-Rt-eT5" id="U3G-xB-ufR"/>
                         <outlet property="wagesLabel" destination="utJ-nc-IhI" id="xvw-C2-4U1"/>

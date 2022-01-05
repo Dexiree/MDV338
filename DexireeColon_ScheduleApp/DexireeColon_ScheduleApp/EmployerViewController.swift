@@ -43,7 +43,6 @@ class EmployerViewController: UIViewController, UITableViewDelegate, UITableView
         cell?.Name.text = "\(employee.firstname) \(employee.lastname)"
         cell?.wages.text = employee.wages
         cell?.title.text = employee.title
-        //print(employee.firstname)
         
         return cell!
     }

@@ -10,7 +10,8 @@ import FirebaseAuth
 import Firebase
 
 
-class EmployeeViewController: UIViewController {
+class EmployeeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
     
     // MARK: - Outlet
     @IBOutlet weak var name: UINavigationItem!
@@ -19,6 +20,7 @@ class EmployeeViewController: UIViewController {
     @IBOutlet weak var wagesLabel: UILabel!
     @IBOutlet weak var timeEmployedLabel: UILabel!
     @IBOutlet weak var datesLabel: UILabel!
+    @IBOutlet weak var schedule: UITableView!
     
     var uid = ""
     let database = Firestore.firestore()
@@ -73,7 +75,16 @@ class EmployeeViewController: UIViewController {
         
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 7
+    }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as? ScheduleTableViewCell
+        
+        
+        return cell!
+    }
     
     
 
