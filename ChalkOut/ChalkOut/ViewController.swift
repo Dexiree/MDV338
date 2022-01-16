@@ -28,10 +28,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // set canvas delegate to self
+        
+        // canvas
         canvasView.delegate = self
         canvasView.drawing = drawing
-        
         // for testing purposes allow fingers to draw
         canvasView.drawingPolicy = .anyInput
         
@@ -54,9 +54,15 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         present(colorPicker, animated: true)
         
-        let newColor = UIView()
+        let newColor = UIButton()
         newColor.backgroundColor = selectedColor
+        newColor.addTarget(self, action: #selector(tappedColor), for: .touchUpInside)
         pallete.addArrangedSubview(newColor)
+    }
+    
+    @objc private func tappedColor(_ sender: UIButton) {
+        // TODO: Change hardcoded tool and width
+        canvasView.tool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 5.0)
     }
     
 
