@@ -8,7 +8,7 @@
 import UIKit
 import PencilKit
 
-class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserver {
+class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserver, UIColorPickerViewControllerDelegate {
     
     // OUTLETS
     @IBOutlet weak var vStack: UIStackView!
@@ -22,6 +22,8 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
             toolPicker.addObserver(self)
             return toolPicker
         }()
+    var selectedColor = UIColor.black
+    let colorPicker = UIColorPickerViewController()
     
 
     override func viewDidLoad() {
@@ -37,8 +39,26 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         toolPicker.setVisible(true, forFirstResponder: canvasView)
         toolPicker.addObserver(canvasView)
         canvasView.becomeFirstResponder()
+        
+        // color picker
+        colorPicker.delegate = self
+        
     }
-
+    
+    func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
+        selectedColor = viewController.selectedColor
+        pallete.subviews.last?.backgroundColor = selectedColor
+    }
+    
+    @IBAction func addColor(_ sender: UIButton) {
+        
+        present(colorPicker, animated: true)
+        
+        let newColor = UIView()
+        newColor.backgroundColor = selectedColor
+        pallete.addArrangedSubview(newColor)
+    }
+    
 
 }
 
