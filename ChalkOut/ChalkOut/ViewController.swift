@@ -15,6 +15,11 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     // Variables
     var drawing = PKDrawing()
+    lazy var toolPicker: PKToolPicker = {
+           let toolPicker = PKToolPicker()
+            toolPicker.addObserver(self)
+            return toolPicker
+        }()
     
 
     override func viewDidLoad() {
@@ -27,16 +32,9 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         canvasView.drawingPolicy = .anyInput
         
         // tool picker
-        let toolPicker = PKToolPicker()
         toolPicker.setVisible(true, forFirstResponder: canvasView)
         toolPicker.addObserver(canvasView)
-//        if let window = parent?.view.window {
-//            let toolPicker = PKToolPicker()
-//            toolPicker.setVisible(true, forFirstResponder: canvasView)
-//            toolPicker.addObserver(canvasView)
-//
-//            canvasView.becomeFirstResponder()
-//        }
+        canvasView.becomeFirstResponder()
     }
 
 
