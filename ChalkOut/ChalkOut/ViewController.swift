@@ -52,10 +52,13 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     @IBAction func addColor(_ sender: UIButton) {
         
+        // show color picker
         present(colorPicker, animated: true)
         
+        // add selected color to pallete
         let newColor = UIButton()
         newColor.backgroundColor = selectedColor
+        newColor.layer.borderColor = CGColor(genericCMYKCyan: 1, magenta: 1, yellow: 1, black: 0, alpha: 1)
         newColor.addTarget(self, action: #selector(tappedColor), for: .touchUpInside)
         pallete.addArrangedSubview(newColor)
     }
@@ -63,6 +66,12 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @objc private func tappedColor(_ sender: UIButton) {
         // TODO: Change hardcoded tool and width
         canvasView.tool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 5.0)
+        
+        // hightlight selected color
+        for i in 0...pallete.subviews.count - 1 {
+            pallete.subviews[i].layer.borderWidth = 0
+        }
+        sender.layer.borderWidth = 5.0
     }
     
 
