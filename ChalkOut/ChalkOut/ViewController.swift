@@ -11,7 +11,9 @@ import PencilKit
 class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserver {
     
     // OUTLETS
+    @IBOutlet weak var vStack: UIStackView!
     @IBOutlet weak var canvasView: PKCanvasView!
+    @IBOutlet weak var pallete: UIStackView!
     
     // Variables
     var drawing = PKDrawing()

@@ -16,25 +16,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZJH-Fy-BfC" customClass="PKCanvasView">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="a6R-eM-Pic">
                                 <rect key="frame" x="0.0" y="74" width="834" height="1100"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7eN-jp-zlT" customClass="PKCanvasView">
+                                        <rect key="frame" x="0.0" y="0.0" width="834" height="990"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LoF-lA-7hr">
+                                        <rect key="frame" x="0.0" y="990" width="834" height="110"/>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="LoF-lA-7hr" firstAttribute="height" secondItem="a6R-eM-Pic" secondAttribute="height" multiplier="0.1" id="Oqu-Q1-9DD"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ZJH-Fy-BfC" secondAttribute="trailing" id="I6w-Bi-rRw"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ZJH-Fy-BfC" secondAttribute="bottom" id="StL-zs-2qc"/>
-                            <constraint firstItem="ZJH-Fy-BfC" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="WS0-Gz-Gvd"/>
-                            <constraint firstItem="ZJH-Fy-BfC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ZCo-bw-rb5"/>
+                            <constraint firstItem="a6R-eM-Pic" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="EEI-CU-xym"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="a6R-eM-Pic" secondAttribute="trailing" id="FZ1-aq-QQ7"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="a6R-eM-Pic" secondAttribute="bottom" id="Szb-J8-h31"/>
+                            <constraint firstItem="a6R-eM-Pic" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="TTR-fV-zOr"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="8yQ-XQ-PDm">
                         <barButtonItem key="leftBarButtonItem" title="Projects" id="iCu-r2-nyW"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="canvasView" destination="ZJH-Fy-BfC" id="aeg-vg-3Hk"/>
+                        <outlet property="canvasView" destination="7eN-jp-zlT" id="Akh-BW-NBJ"/>
+                        <outlet property="pallete" destination="LoF-lA-7hr" id="BHq-VW-JEp"/>
+                        <outlet property="vStack" destination="a6R-eM-Pic" id="nWA-i9-dQP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
