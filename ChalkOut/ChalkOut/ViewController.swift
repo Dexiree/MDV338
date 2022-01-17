@@ -17,6 +17,9 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     // Variables
     var drawing = PKDrawing()
+    var scheme: colorScheme = .auto
+    var temp: temperature = .auto
+    
     lazy var toolPicker: PKToolPicker = {
            let toolPicker = PKToolPicker()
             toolPicker.addObserver(self)
@@ -24,6 +27,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         }()
     var selectedColor = UIColor.black
     let colorPicker = UIColorPickerViewController()
+    
     
 
     override func viewDidLoad() {
@@ -45,6 +49,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
     }
     
+    // MARK: - Palette
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
         selectedColor = viewController.selectedColor
         pallete.subviews.last?.backgroundColor = selectedColor
@@ -63,7 +68,39 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         pallete.addArrangedSubview(newColor)
     }
     
+    @IBAction func generateColors(_ sender: UIButton) {
+        
+        // get first colors info
+        let first = pallete.subviews.first?.backgroundColor
+        var hue: CGFloat = 0.0
+        var saturation: CGFloat = 0.0
+        var brightness: CGFloat = 0.0
+        var alpha: CGFloat = 0.0
+        first?.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        
+        switch scheme {
+        case .analogous:
+            if pallete.subviews.count > 1 {
+                for i in 0...pallete.subviews.count - 1 {
+                    // all the colors except the first
+                    if i > 0 {
+                        let newHue = CGFloat.random(in: hue - 0.01...hue + 0.01)
+                        pallete.subviews[i].backgroundColor = UIColor(hue: newHue, saturation: saturation, brightness: brightness, alpha: alpha)
+                    }
+                }
+            }
+            
+        default:
+            pallete.subviews.forEach { color in
+                color.backgroundColor = UIColor(hue: CGFloat.random(in: 0.0...1.0), saturation: CGFloat.random(in: 0.0...1.0), brightness: CGFloat.random(in: 0.0...1.0), alpha: 1.0)
+            }
+        }
+    }
+    
+    
     @objc private func tappedColor(_ sender: UIButton) {
+        
+        // use selected color to sketch with
         // TODO: Change hardcoded tool and width
         canvasView.tool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 5.0)
         

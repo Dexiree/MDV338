@@ -20,9 +20,17 @@
                                 <rect key="frame" x="0.0" y="74" width="834" height="1100"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7eN-jp-zlT" customClass="PKCanvasView">
-                                        <rect key="frame" x="0.0" y="0.0" width="834" height="990"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="834" height="957"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h6a-2H-df6">
+                                        <rect key="frame" x="0.0" y="957" width="834" height="33"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Generate"/>
+                                        <connections>
+                                            <action selector="generateColors:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4JE-ra-84Z"/>
+                                        </connections>
+                                    </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LoF-lA-7hr">
                                         <rect key="frame" x="0.0" y="990" width="834" height="110"/>
                                         <subviews>
@@ -48,6 +56,9 @@
                                     </stackView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="h6a-2H-df6" firstAttribute="height" secondItem="a6R-eM-Pic" secondAttribute="height" multiplier="0.03" id="4lv-YG-ZbQ"/>
+                                    <constraint firstAttribute="trailing" secondItem="h6a-2H-df6" secondAttribute="trailing" id="5mr-aB-uJu"/>
+                                    <constraint firstItem="h6a-2H-df6" firstAttribute="leading" secondItem="a6R-eM-Pic" secondAttribute="leading" id="6gl-AT-yvg"/>
                                     <constraint firstItem="LoF-lA-7hr" firstAttribute="height" secondItem="a6R-eM-Pic" secondAttribute="height" multiplier="0.1" id="Oqu-Q1-9DD"/>
                                 </constraints>
                             </stackView>
