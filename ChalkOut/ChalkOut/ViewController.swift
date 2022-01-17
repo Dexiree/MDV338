@@ -17,7 +17,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     // Variables
     var drawing = PKDrawing()
-    var scheme: colorScheme = .auto
+    var scheme: colorScheme = .analogous
     var temp: temperature = .auto
     
     lazy var toolPicker: PKToolPicker = {
@@ -70,6 +70,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     @IBAction func generateColors(_ sender: UIButton) {
         
+        // TODO: Change to getting hsb from locked colors
         // get first colors info
         let first = pallete.subviews.first?.backgroundColor
         var hue: CGFloat = 0.0
@@ -84,13 +85,14 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                 for i in 0...pallete.subviews.count - 1 {
                     // all the colors except the first
                     if i > 0 {
-                        let newHue = CGFloat.random(in: hue - 0.01...hue + 0.01)
+                        let newHue = CGFloat.random(in: hue - 0.17...hue + 0.17)
                         pallete.subviews[i].backgroundColor = UIColor(hue: newHue, saturation: saturation, brightness: brightness, alpha: alpha)
                     }
                 }
             }
             
         default:
+            // generates random colors in palette
             pallete.subviews.forEach { color in
                 color.backgroundColor = UIColor(hue: CGFloat.random(in: 0.0...1.0), saturation: CGFloat.random(in: 0.0...1.0), brightness: CGFloat.random(in: 0.0...1.0), alpha: 1.0)
             }
