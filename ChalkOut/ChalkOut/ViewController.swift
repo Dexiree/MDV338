@@ -14,6 +14,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBOutlet weak var vStack: UIStackView!
     @IBOutlet weak var canvasView: PKCanvasView!
     @IBOutlet weak var pallete: UIStackView!
+    @IBOutlet var Popup: UIView!
+    @IBOutlet var Blur: UIVisualEffectView!
+    
+    
     // Variables
     var drawing = PKDrawing()
     var scheme: colorScheme = .analogous
@@ -46,6 +50,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         // color picker
         colorPicker.delegate = self
+        
+        // Popup
+        Blur.bounds = self.view.bounds
+        Popup.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.9, height: self.view.bounds.height * 0.4)
         
     }
     
@@ -132,7 +140,45 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     // MARK: NavBar
     @IBAction func Settings(_ sender: UIBarButtonItem) {
+        animateIn(desiredView: Blur)
+        animateIn(desiredView: Popup)
+    }
+    
+    
+    // MARK: Popup
+    @IBAction func Done(_ sender: UIButton) {
+        animateOut(desiredView: Popup)
+        animateOut(desiredView: Blur)
+    }
+    
+    // animations
+    func animateIn(desiredView: UIView) {
+        // get background
+        let backgroundView = self.view!
         
+        // add popup and blur and supview
+        backgroundView.addSubview(desiredView)
+        
+        // start values of view before animation
+        desiredView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+        desiredView.alpha = 0
+        desiredView.center = backgroundView.center
+        
+        // animate
+        UIView.animate(withDuration: 0.3) {
+            desiredView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            desiredView.alpha = 1
+        }
+    }
+    func animateOut(desiredView: UIView){
+        UIView.animate(withDuration: 0.3) {
+            desiredView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+            desiredView.alpha = 0
+
+        } completion: { _ in
+            desiredView.removeFromSuperview()
+        }
+
     }
     
     

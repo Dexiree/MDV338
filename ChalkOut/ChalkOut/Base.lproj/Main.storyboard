@@ -3,7 +3,6 @@
     <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -76,13 +75,14 @@
                     <navigationItem key="navigationItem" id="8yQ-XQ-PDm">
                         <barButtonItem key="leftBarButtonItem" title="Projects" id="iCu-r2-nyW"/>
                         <barButtonItem key="rightBarButtonItem" title="Settings" id="HQR-th-ePz">
-                            <color key="tintColor" name="AccentColor"/>
                             <connections>
                                 <action selector="Settings:" destination="BYZ-38-t0r" id="gla-lK-nr4"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="Blur" destination="SJ6-UK-RIZ" id="zNV-zI-WOZ"/>
+                        <outlet property="Popup" destination="FkU-qz-wV9" id="neN-fk-1aO"/>
                         <outlet property="canvasView" destination="7eN-jp-zlT" id="Akh-BW-NBJ"/>
                         <outlet property="pallete" destination="iTV-MC-Xdt" id="gvF-2x-kcP"/>
                         <outlet property="vStack" destination="a6R-eM-Pic" id="nWA-i9-dQP"/>
@@ -103,9 +103,13 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Au1-VS-iva">
-                            <rect key="frame" x="20" y="24" width="67" height="31"/>
+                            <rect key="frame" x="20" y="24" width="58.5" height="31"/>
+                            <color key="tintColor" systemColor="systemPinkColor"/>
                             <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Done"/>
+                            <connections>
+                                <action selector="Done:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4uV-wj-GY2"/>
+                            </connections>
                         </button>
                         <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vg5-hJ-g5I">
                             <rect key="frame" x="320" y="24" width="125" height="32"/>
@@ -116,7 +120,7 @@
                         </segmentedControl>
                     </subviews>
                     <viewLayoutGuide key="safeArea" id="sTD-YC-H2m"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="vg5-hJ-g5I" firstAttribute="top" secondItem="sTD-YC-H2m" secondAttribute="top" id="24K-Zv-Vwi"/>
                         <constraint firstItem="sTD-YC-H2m" firstAttribute="trailing" secondItem="vg5-hJ-g5I" secondAttribute="trailing" constant="20" id="4rA-ll-1IM"/>
@@ -148,11 +152,11 @@
     </scenes>
     <resources>
         <image name="plus" catalog="system" width="128" height="113"/>
-        <namedColor name="AccentColor">
-            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
