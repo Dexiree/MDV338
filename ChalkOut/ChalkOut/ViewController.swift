@@ -15,7 +15,9 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBOutlet weak var canvasView: PKCanvasView!
     @IBOutlet weak var pallete: UIStackView!
     @IBOutlet var Popup: UIView!
+    @IBOutlet var Edit: UIView!
     @IBOutlet var Blur: UIVisualEffectView!
+    @IBOutlet weak var Hex: UILabel!
     
     
     // Variables
@@ -23,6 +25,8 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     var scheme: colorScheme = .analogous
     var temp: temperature = .auto
     var selected = 0
+    var holding = false
+    var hexadecimal = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"]
     
     
     lazy var toolPicker: PKToolPicker = {
@@ -75,9 +79,15 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         let newColor = UIButton()
         newColor.backgroundColor = selectedColor
         newColor.layer.borderColor = CGColor(genericCMYKCyan: 1, magenta: 1, yellow: 1, black: 0, alpha: 1)
+        
+        // adding interactions to the button
         newColor.addTarget(self, action: #selector(tappedColor), for: .touchUpInside)
         newColor.addTarget(self, action: #selector(doubleTappedColor), for: .touchDownRepeat)
+        newColor.addTarget(self, action: #selector(holdColor), for: .touchDown)
+        
+        // add new color to the palette
         pallete.addArrangedSubview(newColor)
+        
         // add the color to the new button
         selected = pallete.subviews.count - 1
     }
@@ -115,7 +125,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         }
     }
     
+    // Actions
     @objc private func tappedColor(_ sender: UIButton) {
+        // user is not holding the color but is tapping
+        holding = false
         
         // use selected color to sketch with
         // TODO: Change hardcoded tool and width
@@ -128,7 +141,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         }
         sender.layer.borderWidth = 5.0
     }
-    
     @objc private func doubleTappedColor(_ sender: UIButton) {
         
         // show color picker
@@ -136,6 +148,49 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         //set selected color to change it
         selected = pallete.subviews.firstIndex(of: sender)!
+    }
+    @objc private func holdColor(_ sender: UIButton) {
+        // user is holding the color
+        holding = true
+        // waiting 2 seconds to see if user is still holding down the color
+        Wait(duration: 2) {
+            if self.holding {
+                self.animateIn(desiredView: self.Edit)
+                // convert RGB TO HEX
+                self.Hex.text = "#\(self.getHex(sender.backgroundColor!))"
+            }
+        }
+    }
+    func getHex(_ color: UIColor) -> String {
+        
+        // get colors info
+        var r: CGFloat = 0.0
+        var g: CGFloat = 0.0
+        var b: CGFloat = 0.0
+        var a: CGFloat = 0.0
+        color.getRed(&r, green: &g, blue: &b, alpha: &a)
+        
+        // convert to Ints
+        let red = Int(r*255)
+        let green = Int(g*255)
+        let blue = Int(b*255)
+        
+        // multiply by 16 get the Ints
+        let r1 = Int(red/16)
+        let g1 = Int(green/16)
+        let b1 = Int(blue/16)
+        // get the remainder
+        let r2 = red%16
+        let g2 = green%16
+        let b2 = blue%16
+        // take first half and second halves and convert to hexiadecimal
+        return "\(hexadecimal[r1])\(hexadecimal[r2])\(hexadecimal[g1])\(hexadecimal[g2])\(hexadecimal[b1])\(hexadecimal[b2])"
+    }
+    func Wait(duration: Double, execute: ((() -> Void))?)
+    {
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
+            if let done = execute{done()}
+        }
     }
     
     // MARK: NavBar
@@ -145,11 +200,16 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     }
     
     
-    // MARK: Popup
+    // MARK: Popups
     @IBAction func Done(_ sender: UIButton) {
         animateOut(desiredView: Popup)
         animateOut(desiredView: Blur)
     }
+    
+    @IBAction func CloseEdit(_ sender: UIButton) {
+        animateOut(desiredView: Edit)
+    }
+    
     
     // animations
     func animateIn(desiredView: UIView) {
