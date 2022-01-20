@@ -111,10 +111,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         // use selected color to sketch with
         // TODO: Change hardcoded tool and width
-        //canvasView.tool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 5.0)
-//        var tool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 5.0)
-//        var sTool = toolPicker.selectedTool
-//        sTool = tool
+        //canvasView.tool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 1.0)
         toolPicker.selectedTool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 1.0)
         
         // hightlight selected color
@@ -132,6 +129,12 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         //set selected color to change it
         selected = pallete.subviews.firstIndex(of: sender)!
     }
+    
+    // MARK: NavBar
+    @IBAction func Settings(_ sender: UIBarButtonItem) {
+        
+    }
+    
     
 
 }

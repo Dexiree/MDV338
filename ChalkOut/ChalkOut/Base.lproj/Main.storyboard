@@ -3,6 +3,7 @@
     <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -74,6 +75,12 @@
                     </view>
                     <navigationItem key="navigationItem" id="8yQ-XQ-PDm">
                         <barButtonItem key="leftBarButtonItem" title="Projects" id="iCu-r2-nyW"/>
+                        <barButtonItem key="rightBarButtonItem" title="Settings" id="HQR-th-ePz">
+                            <color key="tintColor" name="AccentColor"/>
+                            <connections>
+                                <action selector="Settings:" destination="BYZ-38-t0r" id="gla-lK-nr4"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="canvasView" destination="7eN-jp-zlT" id="Akh-BW-NBJ"/>
@@ -82,6 +89,41 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <visualEffectView opaque="NO" contentMode="scaleToFill" id="SJ6-UK-RIZ">
+                    <rect key="frame" x="0.0" y="0.0" width="334" height="398"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="ROi-P5-UL1">
+                        <rect key="frame" x="0.0" y="0.0" width="334" height="398"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <blurEffect style="regular"/>
+                </visualEffectView>
+                <view contentMode="scaleToFill" id="FkU-qz-wV9">
+                    <rect key="frame" x="0.0" y="0.0" width="465" height="396"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Au1-VS-iva">
+                            <rect key="frame" x="20" y="24" width="67" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                        </button>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vg5-hJ-g5I">
+                            <rect key="frame" x="320" y="24" width="125" height="32"/>
+                            <segments>
+                                <segment title="Palette"/>
+                                <segment title="Sheets"/>
+                            </segments>
+                        </segmentedControl>
+                    </subviews>
+                    <viewLayoutGuide key="safeArea" id="sTD-YC-H2m"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="vg5-hJ-g5I" firstAttribute="top" secondItem="sTD-YC-H2m" secondAttribute="top" id="24K-Zv-Vwi"/>
+                        <constraint firstItem="sTD-YC-H2m" firstAttribute="trailing" secondItem="vg5-hJ-g5I" secondAttribute="trailing" constant="20" id="4rA-ll-1IM"/>
+                        <constraint firstItem="Au1-VS-iva" firstAttribute="leading" secondItem="sTD-YC-H2m" secondAttribute="leading" constant="20" id="P3P-q4-oI4"/>
+                        <constraint firstItem="Au1-VS-iva" firstAttribute="top" secondItem="sTD-YC-H2m" secondAttribute="top" id="h3C-fw-AjT"/>
+                    </constraints>
+                </view>
             </objects>
             <point key="canvasLocation" x="773.38129496402883" y="83.91959798994975"/>
         </scene>
@@ -106,6 +148,9 @@
     </scenes>
     <resources>
         <image name="plus" catalog="system" width="128" height="113"/>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
