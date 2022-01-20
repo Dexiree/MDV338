@@ -19,6 +19,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     var drawing = PKDrawing()
     var scheme: colorScheme = .analogous
     var temp: temperature = .auto
+    var selected = 0
     
     lazy var toolPicker: PKToolPicker = {
            let toolPicker = PKToolPicker()
@@ -51,8 +52,12 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     // MARK: - Palette
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
+        // set selectColor
         selectedColor = viewController.selectedColor
-        pallete.subviews.last?.backgroundColor = selectedColor
+        
+        // change the color on the palette
+        //pallete.subviews.last?.backgroundColor = selectedColor
+        pallete.subviews[selected].backgroundColor = selectedColor
     }
     
     @IBAction func addColor(_ sender: UIButton) {
@@ -65,7 +70,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         newColor.backgroundColor = selectedColor
         newColor.layer.borderColor = CGColor(genericCMYKCyan: 1, magenta: 1, yellow: 1, black: 0, alpha: 1)
         newColor.addTarget(self, action: #selector(tappedColor), for: .touchUpInside)
+        newColor.addTarget(self, action: #selector(doubleTappedColor), for: .touchDownRepeat)
         pallete.addArrangedSubview(newColor)
+        // add the color to the new button
+        selected = pallete.subviews.count - 1
     }
     
     @IBAction func generateColors(_ sender: UIButton) {
@@ -79,6 +87,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         var alpha: CGFloat = 0.0
         first?.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
         
+        // Generate new colors based on color theme
         switch scheme {
         case .analogous:
             if pallete.subviews.count > 1 {
@@ -92,6 +101,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
             }
             
         default:
+            // TODO: Do not change locked colors
             // generates random colors in palette
             pallete.subviews.forEach { color in
                 color.backgroundColor = UIColor(hue: CGFloat.random(in: 0.0...1.0), saturation: CGFloat.random(in: 0.0...1.0), brightness: CGFloat.random(in: 0.0...1.0), alpha: 1.0)
@@ -111,6 +121,15 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
             pallete.subviews[i].layer.borderWidth = 0
         }
         sender.layer.borderWidth = 5.0
+    }
+    
+    @objc private func doubleTappedColor(_ sender: UIButton) {
+        
+        // show color picker
+        present(colorPicker, animated: true)
+        
+        //set selected color to change it
+        selected = pallete.subviews.firstIndex(of: sender)!
     }
     
 
