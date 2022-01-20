@@ -56,7 +56,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         selectedColor = viewController.selectedColor
         
         // change the color on the palette
-        //pallete.subviews.last?.backgroundColor = selectedColor
         pallete.subviews[selected].backgroundColor = selectedColor
     }
     
