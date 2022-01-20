@@ -14,12 +14,12 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBOutlet weak var vStack: UIStackView!
     @IBOutlet weak var canvasView: PKCanvasView!
     @IBOutlet weak var pallete: UIStackView!
-    
     // Variables
     var drawing = PKDrawing()
     var scheme: colorScheme = .analogous
     var temp: temperature = .auto
     var selected = 0
+    
     
     lazy var toolPicker: PKToolPicker = {
            let toolPicker = PKToolPicker()
@@ -33,7 +33,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // canvas
         canvasView.delegate = self
         canvasView.drawing = drawing
@@ -108,12 +107,15 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         }
     }
     
-    
     @objc private func tappedColor(_ sender: UIButton) {
         
         // use selected color to sketch with
         // TODO: Change hardcoded tool and width
-        canvasView.tool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 5.0)
+        //canvasView.tool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 5.0)
+//        var tool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 5.0)
+//        var sTool = toolPicker.selectedTool
+//        sTool = tool
+        toolPicker.selectedTool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 1.0)
         
         // hightlight selected color
         for i in 0...pallete.subviews.count - 1 {
