@@ -16,6 +16,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBOutlet weak var pallete: UIStackView!
     @IBOutlet var Popup: UIView!
     @IBOutlet var Edit: UIView!
+    @IBOutlet var Tools: UIView!
     @IBOutlet var Blur: UIVisualEffectView!
     @IBOutlet weak var Hex: UILabel!
     @IBOutlet weak var colorEdit: UIView!
@@ -63,6 +64,9 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         Popup.layer.cornerRadius = 20
         // Edit
         Popup.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.9, height: self.view.bounds.height * 0.3)
+        Edit.layer.cornerRadius = 20
+        // Tools
+        Tools.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.9, height: self.view.bounds.height * 0.3)
         Edit.layer.cornerRadius = 20
         
     }
@@ -217,6 +221,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         animateIn(desiredView: Blur)
         animateIn(desiredView: Popup)
     }
+    @IBAction func ChooseTool(_ sender: UIBarButtonItem) {
+        print("Clicked")
+    }
+    
     
     
     // MARK: Popups
@@ -239,9 +247,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     }
     
     
-    
-    
-    // animations
+    // MARK: - Animations
     func animateIn(desiredView: UIView) {
         // get background
         let backgroundView = self.view!

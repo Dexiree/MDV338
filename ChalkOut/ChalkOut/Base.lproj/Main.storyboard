@@ -74,17 +74,31 @@
                     </view>
                     <navigationItem key="navigationItem" id="8yQ-XQ-PDm">
                         <barButtonItem key="leftBarButtonItem" title="Projects" id="iCu-r2-nyW"/>
-                        <barButtonItem key="rightBarButtonItem" title="Settings" id="HQR-th-ePz">
-                            <connections>
-                                <action selector="Settings:" destination="BYZ-38-t0r" id="gla-lK-nr4"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem id="TJb-aB-c5G">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="gyb-cR-vcs">
+                                    <rect key="frame" x="629" y="8" width="185" height="34"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="filled" image="pencil" catalog="system"/>
+                                </button>
+                                <connections>
+                                    <action selector="ChooseTool:" destination="BYZ-38-t0r" id="Wdb-8E-lt4"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Settings" id="HQR-th-ePz">
+                                <connections>
+                                    <action selector="Settings:" destination="BYZ-38-t0r" id="gla-lK-nr4"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="Blur" destination="SJ6-UK-RIZ" id="zNV-zI-WOZ"/>
                         <outlet property="Edit" destination="nCC-76-D2s" id="8B6-r5-a88"/>
                         <outlet property="Hex" destination="IWQ-2j-16K" id="zMt-tl-Neh"/>
                         <outlet property="Popup" destination="FkU-qz-wV9" id="neN-fk-1aO"/>
+                        <outlet property="Tools" destination="1vi-4N-1xh" id="J93-tr-N6U"/>
                         <outlet property="canvasView" destination="7eN-jp-zlT" id="Akh-BW-NBJ"/>
                         <outlet property="colorEdit" destination="r3t-u7-Vhi" id="1Ho-o6-b98"/>
                         <outlet property="pallete" destination="iTV-MC-Xdt" id="gvF-2x-kcP"/>
@@ -203,6 +217,12 @@
                         <constraint firstItem="r3t-u7-Vhi" firstAttribute="height" secondItem="nCC-76-D2s" secondAttribute="height" multiplier="0.75" id="x4W-KF-y0b"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" id="1vi-4N-1xh" userLabel="Tools">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="315"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <viewLayoutGuide key="safeArea" id="HPH-E8-S5V"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
             </objects>
             <point key="canvasLocation" x="773.38129496402883" y="83.91959798994975"/>
         </scene>
@@ -228,6 +248,7 @@
     <resources>
         <image name="doc.on.doc.fill" catalog="system" width="116" height="128"/>
         <image name="lock.fill" catalog="system" width="128" height="128"/>
+        <image name="pencil" catalog="system" width="128" height="113"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <image name="trash.fill" catalog="system" width="121" height="128"/>
         <image name="xmark.app.fill" catalog="system" width="128" height="114"/>
