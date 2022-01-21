@@ -1,0 +1,6 @@
+framework module Pods_ChalkOut {
+  umbrella header "Pods-ChalkOut-umbrella.h"
+
+  export *
+  module * { export * }
+}

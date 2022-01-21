@@ -71,6 +71,11 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
     }
     
+    // Hides home button
+    override var prefersHomeIndicatorAutoHidden: Bool{
+        return true
+    }
+    
     // MARK: - Palette
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
         // set selectColor
@@ -222,7 +227,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         animateIn(desiredView: Popup)
     }
     @IBAction func ChooseTool(_ sender: UIBarButtonItem) {
-        print("Clicked")
+        print("CLICKED")
     }
     
     
@@ -231,6 +236,9 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBAction func Done(_ sender: UIButton) {
         animateOut(desiredView: Popup)
         animateOut(desiredView: Blur)
+        
+        // save test
+        drawing.strokes = canvasView.drawing.strokes
     }
     
     @IBAction func CloseEdit(_ sender: UIButton) {
