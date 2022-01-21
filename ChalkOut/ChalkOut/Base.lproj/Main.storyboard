@@ -76,7 +76,7 @@
                         <barButtonItem key="leftBarButtonItem" title="Projects" id="iCu-r2-nyW"/>
                         <rightBarButtonItems>
                             <barButtonItem id="TJb-aB-c5G">
-                                <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="gyb-cR-vcs">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="gyb-cR-vcs">
                                     <rect key="frame" x="629" y="8" width="185" height="34"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Button"/>

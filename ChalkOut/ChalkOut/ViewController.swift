@@ -7,6 +7,7 @@
 
 import UIKit
 import PencilKit
+import FirebaseStorage
 
 class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserver, UIColorPickerViewControllerDelegate {
     
@@ -24,7 +25,8 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     
     // Variables
-    var drawing = PKDrawing()
+    private let storage = Storage.storage().reference()
+    var drawing = Data()
     var scheme: colorScheme = .analogous
     var temp: temperature = .auto
     var selected = 0
@@ -46,7 +48,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         super.viewDidLoad()
         // canvas
         canvasView.delegate = self
-        canvasView.drawing = drawing
         // for testing purposes allow fingers to draw
         canvasView.drawingPolicy = .anyInput
         
@@ -237,14 +238,36 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         animateOut(desiredView: Popup)
         animateOut(desiredView: Blur)
         
-        // save test
-        drawing.strokes = canvasView.drawing.strokes
+        // save drawing as data
+        drawing = canvasView.drawing.dataRepresentation()
+//        let ref = storage.child("drawings/file.draw").putData(drawing, metadata: nil) { _, error in
+//            guard error == nil else {
+//                print("There was an issue")
+//                return
+//            }
+//        }
+        storage.put
+        
     }
     
     @IBAction func CloseEdit(_ sender: UIButton) {
         animateOut(desiredView: Edit)
     }
     @IBAction func LockEdit(_ sender: UIButton) {
+        // load data as drawing
+//        storage.child("drawings/file.draw").getData(maxSize: <#T##Int64#>) { data, error in
+//
+//            // if error
+//            guard error == nil else {
+//                print("There was an issue")
+//                return
+//            }
+//
+//            // get data
+//            if let loadDrawing = try? PKDrawing(data: data!){
+//                self.canvasView.drawing = loadDrawing
+//            }
+//        }
     }
     @IBAction func DuplicateEdit(_ sender: UIButton) {
         new(color: pallete.subviews[selected].backgroundColor!)
