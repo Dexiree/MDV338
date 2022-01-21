@@ -18,6 +18,8 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBOutlet var Edit: UIView!
     @IBOutlet var Blur: UIVisualEffectView!
     @IBOutlet weak var Hex: UILabel!
+    @IBOutlet weak var colorEdit: UIView!
+    
     
     
     // Variables
@@ -58,6 +60,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // Popup
         Blur.bounds = self.view.bounds
         Popup.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.9, height: self.view.bounds.height * 0.4)
+        Popup.layer.cornerRadius = 20
+        // Edit
+        Popup.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.9, height: self.view.bounds.height * 0.3)
+        Edit.layer.cornerRadius = 20
         
     }
     
@@ -76,8 +82,13 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         present(colorPicker, animated: true)
         
         // add selected color to pallete
+        new(color: selectedColor)
+    }
+    
+    func new(color: UIColor) {
+        // add selected color to pallete
         let newColor = UIButton()
-        newColor.backgroundColor = selectedColor
+        newColor.backgroundColor = color
         newColor.layer.borderColor = CGColor(genericCMYKCyan: 1, magenta: 1, yellow: 1, black: 0, alpha: 1)
         
         // adding interactions to the button
@@ -125,7 +136,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         }
     }
     
-    // Actions
+    // MARK: - Actions
     @objc private func tappedColor(_ sender: UIButton) {
         // user is not holding the color but is tapping
         holding = false
@@ -142,6 +153,8 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         sender.layer.borderWidth = 5.0
     }
     @objc private func doubleTappedColor(_ sender: UIButton) {
+        // user is not holding the color but is tapping
+        holding = false
         
         // show color picker
         present(colorPicker, animated: true)
@@ -152,12 +165,18 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @objc private func holdColor(_ sender: UIButton) {
         // user is holding the color
         holding = true
+        
         // waiting 2 seconds to see if user is still holding down the color
-        Wait(duration: 2) {
+        Wait(duration: 1.5) {
             if self.holding {
                 self.animateIn(desiredView: self.Edit)
-                // convert RGB TO HEX
+                // convert UIColor TO HEX
                 self.Hex.text = "#\(self.getHex(sender.backgroundColor!))"
+                // show chosen color
+                self.colorEdit.backgroundColor = sender.backgroundColor
+                // get seleced
+                self.selected = self.pallete.subviews.firstIndex(of: sender)!
+                
             }
         }
     }
@@ -209,6 +228,17 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBAction func CloseEdit(_ sender: UIButton) {
         animateOut(desiredView: Edit)
     }
+    @IBAction func LockEdit(_ sender: UIButton) {
+    }
+    @IBAction func DuplicateEdit(_ sender: UIButton) {
+        new(color: pallete.subviews[selected].backgroundColor!)
+    }
+    @IBAction func DeleteEdit(_ sender: UIButton) {
+        pallete.subviews[selected].removeFromSuperview()
+        Edit.removeFromSuperview()
+    }
+    
+    
     
     
     // animations

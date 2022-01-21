@@ -86,6 +86,7 @@
                         <outlet property="Hex" destination="IWQ-2j-16K" id="zMt-tl-Neh"/>
                         <outlet property="Popup" destination="FkU-qz-wV9" id="neN-fk-1aO"/>
                         <outlet property="canvasView" destination="7eN-jp-zlT" id="Akh-BW-NBJ"/>
+                        <outlet property="colorEdit" destination="r3t-u7-Vhi" id="1Ho-o6-b98"/>
                         <outlet property="pallete" destination="iTV-MC-Xdt" id="gvF-2x-kcP"/>
                         <outlet property="vStack" destination="a6R-eM-Pic" id="nWA-i9-dQP"/>
                     </connections>
@@ -131,11 +132,11 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" id="nCC-76-D2s" userLabel="Edit">
-                    <rect key="frame" x="0.0" y="0.0" width="455" height="191"/>
+                    <rect key="frame" x="0.0" y="0.0" width="455" height="313"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ObI-Sg-7Tw">
-                            <rect key="frame" x="390" y="20" width="45" height="31"/>
+                            <rect key="frame" x="410" y="14.5" width="45" height="31"/>
                             <color key="tintColor" systemColor="systemRedColor"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain" image="xmark.app.fill" catalog="system"/>
@@ -144,19 +145,62 @@
                             </connections>
                         </button>
                         <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HEX" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IWQ-2j-16K">
-                            <rect key="frame" x="211" y="20" width="33" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <nil key="textColor"/>
+                            <rect key="frame" x="208.5" y="14.5" width="38.5" height="24"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r3t-u7-Vhi">
+                            <rect key="frame" x="20" y="58.5" width="227.5" height="234.5"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bLa-Un-GHZ">
+                            <rect key="frame" x="276" y="211" width="159" height="31"/>
+                            <color key="tintColor" systemColor="systemRedColor"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" image="trash.fill" catalog="system" title="  Delete"/>
+                            <connections>
+                                <action selector="DeleteEdit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sZF-tj-2jD"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NOx-qb-31f">
+                            <rect key="frame" x="276" y="160" width="159" height="31"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" image="doc.on.doc.fill" catalog="system" title="  Duplicate"/>
+                            <connections>
+                                <action selector="DuplicateEdit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3Bg-5D-mka"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iwc-X8-yyk">
+                            <rect key="frame" x="276" y="109" width="159" height="31"/>
+                            <color key="tintColor" systemColor="systemYellowColor"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" image="lock.fill" catalog="system" title="  Lock"/>
+                            <connections>
+                                <action selector="LockEdit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NOb-Hy-gPv"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <viewLayoutGuide key="safeArea" id="ww9-z0-vYU"/>
-                    <color key="backgroundColor" systemColor="systemGray2Color"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="IWQ-2j-16K" firstAttribute="top" secondItem="nCC-76-D2s" secondAttribute="top" constant="20" id="Gck-Sf-vnv"/>
-                        <constraint firstItem="ObI-Sg-7Tw" firstAttribute="top" secondItem="nCC-76-D2s" secondAttribute="top" constant="20" id="Whg-NJ-bg3"/>
-                        <constraint firstItem="ww9-z0-vYU" firstAttribute="trailing" secondItem="ObI-Sg-7Tw" secondAttribute="trailing" constant="20" id="xWm-1R-05b"/>
-                        <constraint firstItem="IWQ-2j-16K" firstAttribute="centerX" secondItem="ww9-z0-vYU" secondAttribute="centerX" id="yBf-Sx-rPZ"/>
+                        <constraint firstItem="r3t-u7-Vhi" firstAttribute="leading" secondItem="ww9-z0-vYU" secondAttribute="leading" constant="20" id="2Qp-oP-fgV"/>
+                        <constraint firstItem="bLa-Un-GHZ" firstAttribute="top" secondItem="NOx-qb-31f" secondAttribute="bottom" constant="20" id="6nC-Yz-Hnm"/>
+                        <constraint firstItem="r3t-u7-Vhi" firstAttribute="top" secondItem="IWQ-2j-16K" secondAttribute="bottom" constant="20" id="AYQ-kQ-drn"/>
+                        <constraint firstItem="ObI-Sg-7Tw" firstAttribute="trailing" secondItem="nCC-76-D2s" secondAttribute="trailingMargin" constant="20" id="Akj-hi-zN1"/>
+                        <constraint firstItem="IWQ-2j-16K" firstAttribute="centerX" secondItem="nCC-76-D2s" secondAttribute="centerX" id="MGV-G3-dzS"/>
+                        <constraint firstItem="NOx-qb-31f" firstAttribute="width" secondItem="nCC-76-D2s" secondAttribute="width" multiplier="0.35" id="QA3-tL-527"/>
+                        <constraint firstItem="ww9-z0-vYU" firstAttribute="trailing" secondItem="iwc-X8-yyk" secondAttribute="trailing" constant="20" id="QgG-b6-bKf"/>
+                        <constraint firstItem="r3t-u7-Vhi" firstAttribute="width" secondItem="nCC-76-D2s" secondAttribute="width" multiplier="0.5" id="X9z-eV-oWM"/>
+                        <constraint firstItem="bLa-Un-GHZ" firstAttribute="width" secondItem="NOx-qb-31f" secondAttribute="width" id="bVj-5I-5im"/>
+                        <constraint firstItem="ObI-Sg-7Tw" firstAttribute="top" secondItem="IWQ-2j-16K" secondAttribute="top" id="fMo-TR-iDe"/>
+                        <constraint firstItem="ww9-z0-vYU" firstAttribute="bottom" secondItem="r3t-u7-Vhi" secondAttribute="bottom" constant="20" id="iFv-p8-eD5"/>
+                        <constraint firstItem="NOx-qb-31f" firstAttribute="top" secondItem="iwc-X8-yyk" secondAttribute="bottom" constant="20" id="jIy-Bf-ahV"/>
+                        <constraint firstItem="ww9-z0-vYU" firstAttribute="trailing" secondItem="NOx-qb-31f" secondAttribute="trailing" constant="20" id="nee-7U-XrJ"/>
+                        <constraint firstItem="ww9-z0-vYU" firstAttribute="trailing" secondItem="bLa-Un-GHZ" secondAttribute="trailing" constant="20" id="oRX-DS-hO7"/>
+                        <constraint firstItem="iwc-X8-yyk" firstAttribute="width" secondItem="NOx-qb-31f" secondAttribute="width" id="r2c-Oh-3NC"/>
+                        <constraint firstItem="NOx-qb-31f" firstAttribute="centerY" secondItem="r3t-u7-Vhi" secondAttribute="centerY" id="te2-8c-xD6"/>
+                        <constraint firstItem="r3t-u7-Vhi" firstAttribute="height" secondItem="nCC-76-D2s" secondAttribute="height" multiplier="0.75" id="x4W-KF-y0b"/>
                     </constraints>
                 </view>
             </objects>
@@ -182,19 +226,22 @@
         </scene>
     </scenes>
     <resources>
+        <image name="doc.on.doc.fill" catalog="system" width="116" height="128"/>
+        <image name="lock.fill" catalog="system" width="128" height="128"/>
         <image name="plus" catalog="system" width="128" height="113"/>
+        <image name="trash.fill" catalog="system" width="121" height="128"/>
         <image name="xmark.app.fill" catalog="system" width="128" height="114"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGray2Color">
-            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemPinkColor">
             <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemYellowColor">
+            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
