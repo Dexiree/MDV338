@@ -15,25 +15,32 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBOutlet weak var vStack: UIStackView!
     @IBOutlet weak var canvasView: PKCanvasView!
     @IBOutlet weak var pallete: UIStackView!
+    
     @IBOutlet var Popup: UIView!
     @IBOutlet var Edit: UIView!
     @IBOutlet var Tools: UIView!
     @IBOutlet var Blur: UIVisualEffectView!
+    
     @IBOutlet weak var Hex: UILabel!
     @IBOutlet weak var colorEdit: UIView!
+    
     @IBOutlet weak var toolsPicker: UISegmentedControl!
+    @IBOutlet weak var editingToolsPicker: UISegmentedControl!
+    
+    
     
     
     
     // Variables
     private let storage = Storage.storage().reference()
     var drawing = Data()
+    
     var scheme: colorScheme = .analogous
     var temp: temperature = .auto
+    
     var selected = 0
     var holding = false
     var hexadecimal = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"]
-    
     
     lazy var toolPicker: PKToolPicker = {
            let toolPicker = PKToolPicker()
@@ -43,7 +50,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     var selectedColor = UIColor.black
     let colorPicker = UIColorPickerViewController()
     
-    
+    var ink = PKInkingTool(.pencil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,7 +75,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         Edit.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.75, height: self.view.bounds.height * 0.3)
         Edit.layer.cornerRadius = 20
         // Tools
-        Tools.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.5, height: self.view.bounds.height * 0.15)
+        Tools.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.5, height: self.view.bounds.height * 0.25)
         Tools.layer.cornerRadius = 20
         
     }
@@ -85,6 +92,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         // change the color on the palette
         pallete.subviews[selected].backgroundColor = selectedColor
+        
+        // change color for tool
+        ink.color = selectedColor
+        toolPicker.selectedTool = ink
     }
     
     @IBAction func addColor(_ sender: UIButton) {
@@ -97,7 +108,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     }
     
     func new(color: UIColor) {
-        // add selected color to pallete
+        // creating new button
         let newColor = UIButton()
         newColor.backgroundColor = color
         newColor.layer.borderColor = CGColor(genericCMYKCyan: 1, magenta: 1, yellow: 1, black: 0, alpha: 1)
@@ -112,6 +123,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         // add the color to the new button
         selected = pallete.subviews.count - 1
+        
     }
     
     @IBAction func generateColors(_ sender: UIButton) {
@@ -154,8 +166,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         // use selected color to sketch with
         // TODO: Change hardcoded tool and width
-        //canvasView.tool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 1.0)
-        toolPicker.selectedTool = PKInkingTool(.pencil, color: sender.backgroundColor!, width: 1.0)
+        toolPicker.selectedTool = PKInkingTool(ink.inkType, color: sender.backgroundColor!, width: ink.width)
         
         // hightlight selected color
         for i in 0...pallete.subviews.count - 1 {
@@ -237,9 +248,62 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     }
     
     // MARK: - Tools
-    @IBAction func changeTool(_ sender: UISegmentedControl) {
+    func toolPickerSelectedToolDidChange(_ toolPicker: PKToolPicker) {
         
+        if let inkling = toolPicker.selectedTool as? PKInkingTool {
+            print("INK: \(inkling)")
+            ink = inkling
+        } else if let eraser = toolPicker.selectedTool as? PKEraserTool {
+            print("ERASER: \(eraser)")
+        } else if let lasso = toolPicker.selectedTool as? PKLassoTool {
+            print("LASSO: \(lasso)")
+        }
     }
+    // TODO: Delete this
+    @IBAction func changeTool(_ sender: UISegmentedControl) {
+        let tool = sender.selectedSegmentIndex
+        
+        switch tool {
+        case 0:
+            ink = PKInkingTool(.pencil, color: selectedColor)
+            
+            editingToolsPicker.selectedSegmentTintColor = .clear
+            sender.selectedSegmentTintColor = .white
+        case 1:
+            ink = PKInkingTool(.pen, color: selectedColor)
+            editingToolsPicker.selectedSegmentTintColor = .clear
+            sender.selectedSegmentTintColor = .white
+        case 2:
+            ink = PKInkingTool(.marker, color: selectedColor)
+            editingToolsPicker.selectedSegmentTintColor = .clear
+            sender.selectedSegmentTintColor = .white
+        default:
+            ink = PKInkingTool(.pencil)
+        }
+        
+        canvasView.tool = ink
+    }
+    @IBAction func changeEditingTool(_ sender: UISegmentedControl) {
+        let tool = sender.selectedSegmentIndex
+        
+        switch tool {
+        case 0:
+            canvasView.tool = PKEraserTool(.bitmap)
+            toolsPicker.selectedSegmentTintColor = .clear
+            sender.selectedSegmentTintColor = .white
+        case 1:
+            canvasView.tool = PKEraserTool(.vector)
+            toolsPicker.selectedSegmentTintColor = .clear
+            sender.selectedSegmentTintColor = .white
+        case 2:
+            canvasView.tool =  PKLassoTool()
+            toolsPicker.selectedSegmentTintColor = .clear
+            sender.selectedSegmentTintColor = .white
+        default:
+            return
+        }
+    }
+    
     
     
     
