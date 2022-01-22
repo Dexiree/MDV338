@@ -81,6 +81,9 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="filled" image="pencil" catalog="system"/>
+                                    <connections>
+                                        <action selector="ToolBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bq1-YH-TgF"/>
+                                    </connections>
                                 </button>
                                 <connections>
                                     <action selector="ChooseTool:" destination="BYZ-38-t0r" id="Wdb-8E-lt4"/>
@@ -100,8 +103,8 @@
                         <outlet property="Popup" destination="FkU-qz-wV9" id="neN-fk-1aO"/>
                         <outlet property="Tools" destination="1vi-4N-1xh" id="J93-tr-N6U"/>
                         <outlet property="canvasView" destination="7eN-jp-zlT" id="Akh-BW-NBJ"/>
-                        <outlet property="colorEdit" destination="r3t-u7-Vhi" id="1Ho-o6-b98"/>
                         <outlet property="pallete" destination="iTV-MC-Xdt" id="gvF-2x-kcP"/>
+                        <outlet property="toolsPicker" destination="cL9-mU-pRa" id="6eO-pA-sqJ"/>
                         <outlet property="vStack" destination="a6R-eM-Pic" id="nWA-i9-dQP"/>
                     </connections>
                 </viewController>
@@ -218,10 +221,56 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" id="1vi-4N-1xh" userLabel="Tools">
-                    <rect key="frame" x="0.0" y="0.0" width="240" height="315"/>
+                    <rect key="frame" x="0.0" y="0.0" width="354" height="153"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="7IQ-Ms-XcH">
+                            <rect key="frame" x="42.5" y="110" width="269.5" height="31"/>
+                        </slider>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="cL9-mU-pRa">
+                            <rect key="frame" x="44.5" y="59" width="265.5" height="32"/>
+                            <segments>
+                                <segment title="Pencil"/>
+                                <segment title="Pen"/>
+                                <segment title="Eraser"/>
+                                <segment title="Selection"/>
+                            </segments>
+                            <connections>
+                                <action selector="changeTool:" destination="BYZ-38-t0r" eventType="valueChanged" id="jCc-Ux-TtE"/>
+                            </connections>
+                        </segmentedControl>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZkO-tn-fqj">
+                            <rect key="frame" x="313" y="20" width="21" height="19"/>
+                            <color key="tintColor" systemColor="systemRedColor"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="xmark.app.fill" catalog="system">
+                                <color key="titleColor" systemColor="systemRedColor"/>
+                            </state>
+                            <connections>
+                                <action selector="CloseTools:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Fpp-IW-ojR"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tools" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZJ4-Oq-ASF">
+                            <rect key="frame" x="156.5" y="20" width="41" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
                     <viewLayoutGuide key="safeArea" id="HPH-E8-S5V"/>
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="7IQ-Ms-XcH" firstAttribute="centerX" secondItem="HPH-E8-S5V" secondAttribute="centerX" id="0iu-22-8rb"/>
+                        <constraint firstItem="ZJ4-Oq-ASF" firstAttribute="top" secondItem="1vi-4N-1xh" secondAttribute="top" constant="20" id="6zr-q0-acC"/>
+                        <constraint firstItem="ZkO-tn-fqj" firstAttribute="top" secondItem="1vi-4N-1xh" secondAttribute="top" constant="20" id="XeP-Vk-czL"/>
+                        <constraint firstItem="7IQ-Ms-XcH" firstAttribute="width" secondItem="1vi-4N-1xh" secondAttribute="width" multiplier="0.75" id="fPb-23-yU9"/>
+                        <constraint firstItem="HPH-E8-S5V" firstAttribute="trailing" secondItem="ZkO-tn-fqj" secondAttribute="trailing" constant="20" id="ihx-Ns-qdx"/>
+                        <constraint firstItem="cL9-mU-pRa" firstAttribute="centerX" secondItem="HPH-E8-S5V" secondAttribute="centerX" id="jXh-gh-L30"/>
+                        <constraint firstItem="7IQ-Ms-XcH" firstAttribute="top" secondItem="cL9-mU-pRa" secondAttribute="bottom" constant="20" id="lh7-wc-IJj"/>
+                        <constraint firstItem="cL9-mU-pRa" firstAttribute="top" secondItem="ZkO-tn-fqj" secondAttribute="bottom" constant="20" id="mTr-Rv-7t6"/>
+                        <constraint firstItem="ZJ4-Oq-ASF" firstAttribute="centerX" secondItem="HPH-E8-S5V" secondAttribute="centerX" id="o8X-qY-0XW"/>
+                        <constraint firstItem="cL9-mU-pRa" firstAttribute="width" secondItem="1vi-4N-1xh" secondAttribute="width" multiplier="0.75" id="xHG-EV-17Y"/>
+                    </constraints>
                 </view>
             </objects>
             <point key="canvasLocation" x="773.38129496402883" y="83.91959798994975"/>

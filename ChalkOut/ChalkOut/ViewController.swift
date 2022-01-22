@@ -21,6 +21,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBOutlet var Blur: UIVisualEffectView!
     @IBOutlet weak var Hex: UILabel!
     @IBOutlet weak var colorEdit: UIView!
+    @IBOutlet weak var toolsPicker: UISegmentedControl!
     
     
     
@@ -64,11 +65,11 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         Popup.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.9, height: self.view.bounds.height * 0.4)
         Popup.layer.cornerRadius = 20
         // Edit
-        Popup.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.9, height: self.view.bounds.height * 0.3)
+        Edit.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.75, height: self.view.bounds.height * 0.3)
         Edit.layer.cornerRadius = 20
         // Tools
-        Tools.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.9, height: self.view.bounds.height * 0.3)
-        Edit.layer.cornerRadius = 20
+        Tools.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.5, height: self.view.bounds.height * 0.15)
+        Tools.layer.cornerRadius = 20
         
     }
     
@@ -230,15 +231,30 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBAction func ChooseTool(_ sender: UIBarButtonItem) {
         print("CLICKED")
     }
+    @IBAction func ToolBtn(_ sender: UIButton) {
+        animateIn(desiredView: Blur)
+        animateIn(desiredView: Tools)
+    }
+    
+    // MARK: - Tools
+    @IBAction func changeTool(_ sender: UISegmentedControl) {
+        
+    }
     
     
     
-    // MARK: Popups
+    // MARK: - Popups
     @IBAction func Done(_ sender: UIButton) {
         animateOut(desiredView: Popup)
         animateOut(desiredView: Blur)
         
     }
+    
+    @IBAction func CloseTools(_ sender: UIButton) {
+        animateOut(desiredView: Tools)
+        animateOut(desiredView: Blur)
+    }
+    
     
     @IBAction func CloseEdit(_ sender: UIButton) {
         animateOut(desiredView: Edit)
