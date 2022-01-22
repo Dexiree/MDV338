@@ -240,13 +240,20 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         // save drawing as data
         drawing = canvasView.drawing.dataRepresentation()
-//        let ref = storage.child("drawings/file.draw").putData(drawing, metadata: nil) { _, error in
-//            guard error == nil else {
-//                print("There was an issue")
-//                return
+        
+        let ref = storage.child("drawings/file.drawing").putData(drawing, metadata: nil) { _, error in
+            guard error == nil else {
+                print("There was an issue")
+                return
+            }
+//            self.storage.child("drawings/file.drawing").downloadURL { url, error in
+//                guard let url = url, error == nil else {
+//                    return
+//                }
+//                let urlString = url.absoluteString
+//                print("Download: \(urlString)")
 //            }
-//        }
-        storage.put
+        }
         
     }
     
@@ -254,20 +261,22 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         animateOut(desiredView: Edit)
     }
     @IBAction func LockEdit(_ sender: UIButton) {
+        
         // load data as drawing
-//        storage.child("drawings/file.draw").getData(maxSize: <#T##Int64#>) { data, error in
-//
-//            // if error
-//            guard error == nil else {
-//                print("There was an issue")
-//                return
-//            }
-//
-//            // get data
-//            if let loadDrawing = try? PKDrawing(data: data!){
-//                self.canvasView.drawing = loadDrawing
-//            }
-//        }
+        storage.child("drawings/file.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
+
+            // if error
+            guard let data = data, error == nil else {
+                print("There was an issue")
+                return
+            }
+
+            // get data
+            if let loadDrawing = try? PKDrawing(data: data){
+                self.canvasView.drawing = loadDrawing
+            }
+        }
+        
     }
     @IBAction func DuplicateEdit(_ sender: UIButton) {
         new(color: pallete.subviews[selected].backgroundColor!)
@@ -306,6 +315,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
             desiredView.removeFromSuperview()
         }
 
+    }
+    
+    func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
+        // saves drawing every time user edits the canvas
     }
     
     
