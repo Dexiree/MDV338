@@ -238,23 +238,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         animateOut(desiredView: Popup)
         animateOut(desiredView: Blur)
         
-        // save drawing as data
-        drawing = canvasView.drawing.dataRepresentation()
-        
-        let ref = storage.child("drawings/file.drawing").putData(drawing, metadata: nil) { _, error in
-            guard error == nil else {
-                print("There was an issue")
-                return
-            }
-//            self.storage.child("drawings/file.drawing").downloadURL { url, error in
-//                guard let url = url, error == nil else {
-//                    return
-//                }
-//                let urlString = url.absoluteString
-//                print("Download: \(urlString)")
-//            }
-        }
-        
     }
     
     @IBAction func CloseEdit(_ sender: UIButton) {
@@ -319,6 +302,22 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         // saves drawing every time user edits the canvas
+        drawing = canvasView.drawing.dataRepresentation()
+        
+        let ref = storage.child("drawings/file.drawing").putData(drawing, metadata: nil) { _, error in
+            guard error == nil else {
+                print("There was an issue")
+                return
+            }
+            
+//            self.storage.child("drawings/file.drawing").downloadURL { url, error in
+//                guard let url = url, error == nil else {
+//                    return
+//                }
+//                let urlString = url.absoluteString
+//                print("Download: \(urlString)")
+//            }
+        }
     }
     
     
