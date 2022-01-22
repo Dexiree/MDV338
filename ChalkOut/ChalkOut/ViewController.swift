@@ -124,6 +124,9 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // add the color to the new button
         selected = pallete.subviews.count - 1
         
+        // save to firebase
+        
+        
     }
     
     @IBAction func generateColors(_ sender: UIButton) {
@@ -384,7 +387,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // saves drawing every time user edits the canvas
         drawing = canvasView.drawing.dataRepresentation()
         
-        let ref = storage.child("drawings/file.drawing").putData(drawing, metadata: nil) { _, error in
+        storage.child("drawings/file.drawing").putData(drawing, metadata: nil) { _, error in
             guard error == nil else {
                 print("There was an issue")
                 return
