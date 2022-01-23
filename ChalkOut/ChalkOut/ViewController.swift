@@ -387,6 +387,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // saves drawing every time user edits the canvas
         drawing = canvasView.drawing.dataRepresentation()
         
+        // saves drawing as data to database
         storage.child("drawings/file.drawing").putData(drawing, metadata: nil) { _, error in
             guard error == nil else {
                 print("There was an issue")
@@ -401,6 +402,36 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
 //                print("Download: \(urlString)")
 //            }
         }
+        
+        // save snapshot of drawing as data to database
+        // begin convertion of drawing to bitmap
+        UIGraphicsBeginImageContextWithOptions(canvasView.bounds.size, false, UIScreen.main.scale)
+        // get the snapshot of image
+        canvasView.drawHierarchy(in: canvasView.bounds, afterScreenUpdates: true)
+        // get snapshot from uigraphics and end
+        let snapshot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        // make sure the snapshot is not nil
+        if snapshot != nil {
+            // turn snapshot into data
+            guard let snapData = snapshot?.pngData() else {return}
+            // send data to firebase
+            storage.child("drawings/snapshot.png").putData(snapData, metadata: nil) { _, error in
+                guard error == nil else {
+                    print("There was an issue")
+                    return
+                }
+                
+                self.storage.child("drawings/snapshot.png").downloadURL { url, error in
+                    guard let url = url, error == nil else {
+                        return
+                    }
+                    let urlString = url.absoluteString
+                    print("Download: \(urlString)")
+                }
+            }
+        }
+        
     }
     
     

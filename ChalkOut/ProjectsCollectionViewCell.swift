@@ -11,7 +11,6 @@ class ProjectsCollectionViewCell: UICollectionViewCell {
     
     // OUTLETS
     @IBOutlet weak var snapshot: UIImageView!
-    @IBOutlet weak var palette: UIView!
     
     
     static let identifier = "ProjectsCollectionViewCell"
@@ -21,9 +20,8 @@ class ProjectsCollectionViewCell: UICollectionViewCell {
         // Initialization code
     }
     
-    public func configure(with image: UIImage, and palette: UIView) {
+    public func configure(with image: UIImage) {
         snapshot.image = image
-        self.palette = palette
     }
     
     static func nib() -> UINib {

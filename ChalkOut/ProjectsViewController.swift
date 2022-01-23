@@ -25,8 +25,14 @@ class ProjectsViewController: UIViewController {
         projectsCollection.register(ProjectsCollectionViewCell.nib(), forCellWithReuseIdentifier: ProjectsCollectionViewCell.identifier)
         
         // set layout for cells
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: self.view.bounds.width / 4, height: self.view.bounds.height / 10)
+        var layout: UICollectionViewFlowLayout {
+            let flow = UICollectionViewFlowLayout()
+            flow.itemSize = CGSize(width: self.view.bounds.width / 4, height: self.view.bounds.height / 10)
+            flow.minimumInteritemSpacing = 1
+            flow.minimumLineSpacing = 1
+            flow.scrollDirection = .vertical
+            return flow
+        }
         projectsCollection.collectionViewLayout = layout
         
          //set self as delegate and datasource
@@ -74,8 +80,7 @@ extension ProjectsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = projectsCollection.dequeueReusableCell(withReuseIdentifier: ProjectsCollectionViewCell.identifier, for: indexPath) as! ProjectsCollectionViewCell
-        
-        cell.configure(with: UIImage(systemName: "person.circle")!, and: UIView())
+        cell.configure(with: UIImage(systemName: "person.circle")!)
         
         return cell
     }

@@ -4,7 +4,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,29 +16,23 @@
                 <rect key="frame" x="0.0" y="0.0" width="218" height="205"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H57-Jm-qg0">
-                        <rect key="frame" x="0.0" y="0.0" width="154" height="205"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="H57-Jm-qg0">
+                        <rect key="frame" x="0.0" y="0.0" width="218" height="205"/>
                     </imageView>
-                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s3D-fV-IjQ">
-                        <rect key="frame" x="154" y="0.0" width="64" height="205"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="H57-Jm-qg0" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="CZe-Mh-EjO"/>
+                <constraint firstItem="H57-Jm-qg0" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="W87-dL-Akt"/>
+                <constraint firstAttribute="trailing" secondItem="H57-Jm-qg0" secondAttribute="trailing" id="hH4-CS-jRq"/>
+                <constraint firstAttribute="bottom" secondItem="H57-Jm-qg0" secondAttribute="bottom" id="vbD-VX-IgU"/>
+            </constraints>
             <size key="customSize" width="218" height="205"/>
             <connections>
-                <outlet property="palette" destination="s3D-fV-IjQ" id="viR-cE-jVK"/>
                 <outlet property="snapshot" destination="H57-Jm-qg0" id="evp-Xt-IW8"/>
             </connections>
             <point key="canvasLocation" x="259.4202898550725" y="86.71875"/>
         </collectionViewCell>
     </objects>
-    <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-    </resources>
 </document>
