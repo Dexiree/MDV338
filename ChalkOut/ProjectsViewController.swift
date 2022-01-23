@@ -82,12 +82,13 @@ extension ProjectsViewController: UICollectionViewDelegate {
         
         let selected = (indexPath[0]*4) + indexPath[1]
         let chosenProject = projects[selected]
-        print("Tapped \(projects[selected])")
         
         // send info to canvasView
         if let canvas = navigationController?.viewControllers[0] as? ViewController {
+            
             // send project Name to root ViewController
             canvas.projectName = chosenProject
+            
             // load data as drawing
             storage.child("Projects/\(chosenProject)/sketch.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
 
@@ -97,12 +98,15 @@ extension ProjectsViewController: UICollectionViewDelegate {
                     return
                 }
 
-                // get data
-                print("Data: \(data)")
+                // get sketch data
                 if let loadDrawing = try? PKDrawing(data: data){
                     canvas.canvasView.drawing = loadDrawing
                 }
             }
+            
+            // get palette data
+            
+            
         }
         
         // pop view

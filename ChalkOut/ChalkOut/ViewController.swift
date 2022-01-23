@@ -36,7 +36,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     var selected = 0
     var holding = false
-    var hexadecimal = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"]
     
     lazy var toolPicker: PKToolPicker = {
            let toolPicker = PKToolPicker()
@@ -96,6 +95,18 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // change color for tool
         ink.color = selectedColor
         toolPicker.selectedTool = ink
+        
+        //save color palette to Firebase
+        var paletteString = ""
+        for color in pallete.subviews {
+            paletteString.append("#\((color.backgroundColor?.getHex())!)")
+        }
+        storage.child("Projects/projectName/palette.txt").putData(paletteString.data(using: .utf16)!, metadata: nil) { _, error in
+            guard error == nil else {
+                print("There was an issue")
+                return
+            }
+        }
     }
     
     @IBAction func addColor(_ sender: UIButton) {
@@ -196,7 +207,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
             if self.holding {
                 self.animateIn(desiredView: self.Edit)
                 // convert UIColor TO HEX
-                self.Hex.text = "#\(self.getHex(sender.backgroundColor!))"
+                self.Hex.text = "#\(sender.backgroundColor!.getHex())"
                 // show chosen color
                 self.colorEdit.backgroundColor = sender.backgroundColor
                 // get seleced
@@ -204,31 +215,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                 
             }
         }
-    }
-    func getHex(_ color: UIColor) -> String {
-        
-        // get colors info
-        var r: CGFloat = 0.0
-        var g: CGFloat = 0.0
-        var b: CGFloat = 0.0
-        var a: CGFloat = 0.0
-        color.getRed(&r, green: &g, blue: &b, alpha: &a)
-        
-        // convert to Ints
-        let red = Int(r*255)
-        let green = Int(g*255)
-        let blue = Int(b*255)
-        
-        // multiply by 16 get the Ints
-        let r1 = Int(red/16)
-        let g1 = Int(green/16)
-        let b1 = Int(blue/16)
-        // get the remainder
-        let r2 = red%16
-        let g2 = green%16
-        let b2 = blue%16
-        // take first half and second halves and convert to hexiadecimal
-        return "\(hexadecimal[r1])\(hexadecimal[r2])\(hexadecimal[g1])\(hexadecimal[g2])\(hexadecimal[b1])\(hexadecimal[b2])"
     }
     func Wait(duration: Double, execute: ((() -> Void))?)
     {
@@ -267,21 +253,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         animateOut(desiredView: Edit)
     }
     @IBAction func LockEdit(_ sender: UIButton) {
-        
-        // load data as drawing
-        storage.child("Projects/projectName/sketch.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
-
-            // if error
-            guard let data = data, error == nil else {
-                print("There was an issue")
-                return
-            }
-
-            // get data
-            if let loadDrawing = try? PKDrawing(data: data){
-                self.canvasView.drawing = loadDrawing
-            }
-        }
         
     }
     @IBAction func DuplicateEdit(_ sender: UIButton) {
@@ -323,6 +294,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
 
     }
     
+    // MARK: - Saving Sketch Data
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         
         // saves drawing every time user edits the canvas
@@ -367,8 +339,57 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         }
         
     }
-    
-    
 
+}
+
+extension UIColor{
+    func getHex() -> String {
+        // hexadecimal chart
+        let hexadecimal = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"]
+        // get colors info
+        var r: CGFloat = 0.0
+        var g: CGFloat = 0.0
+        var b: CGFloat = 0.0
+        var a: CGFloat = 0.0
+        self.getRed(&r, green: &g, blue: &b, alpha: &a)
+        
+        // convert to Ints
+        let red = Int(r*255)
+        let green = Int(g*255)
+        let blue = Int(b*255)
+        
+        // multiply by 16 get the Ints
+        let r1 = Int(red/16)
+        let g1 = Int(green/16)
+        let b1 = Int(blue/16)
+        // get the remainder
+        let r2 = red%16
+        let g2 = green%16
+        let b2 = blue%16
+        // take first half and second halves and convert to hexiadecimal
+        return "\(hexadecimal[r1])\(hexadecimal[r2])\(hexadecimal[g1])\(hexadecimal[g2])\(hexadecimal[b1])\(hexadecimal[b2])"
+    }
+    
+    func convertRGB(from hex: String) -> UIColor {
+        // hexadecimal chart
+        let hexadecimal = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"]
+        
+        let r1 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 0)]))!
+        let r2 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 1)]))!
+        let red = (r1 * 16) + r2
+        
+        let g1 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 2)]))!
+        let g2 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 3)]))!
+        let green = (g1 * 16) + g2
+        
+        let b1 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 4)]))!
+        let b2 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 5)]))!
+        let blue = (b1 * 16) + b2
+        
+        
+        let color = UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 1.0)
+        
+        return color
+    }
 }
 
