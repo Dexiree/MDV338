@@ -23,13 +23,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBOutlet weak var Hex: UILabel!
     @IBOutlet weak var colorEdit: UIView!
     
-    
-    
-    
-    
     // Variables
     private let storage = Storage.storage().reference()
-    var drawing = Data()
+    //var drawing = Data()
+    let animation = Animations()
     
     var scheme: colorScheme = .analogous
     var temp: temperature = .auto
@@ -48,6 +45,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     var projectName = "Untiled"
 
+    // MARK: Load View
     override func viewDidLoad() {
         super.viewDidLoad()
         // canvas
@@ -85,10 +83,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     }
     
     // MARK: - Palette
+    // color picker
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
         // set selectColor
         selectedColor = viewController.selectedColor
-        
         // change the color on the palette
         pallete.subviews[selected].backgroundColor = selectedColor
         
@@ -97,18 +95,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         toolPicker.selectedTool = ink
         
         //save color palette to Firebase
-        var paletteString = ""
-        for color in pallete.subviews {
-            paletteString.append("#\((color.backgroundColor?.getHex())!)")
-        }
-        storage.child("Projects/projectName/palette.txt").putData(paletteString.data(using: .utf16)!, metadata: nil) { _, error in
-            guard error == nil else {
-                print("There was an issue")
-                return
-            }
-        }
+        savePalette()
     }
     
+    // buttons
     @IBAction func addColor(_ sender: UIButton) {
         
         // show color picker
@@ -117,29 +107,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // add selected color to pallete
         new(color: selectedColor)
     }
-    
-    func new(color: UIColor) {
-        // creating new button
-        let newColor = UIButton()
-        newColor.backgroundColor = color
-        newColor.layer.borderColor = CGColor(genericCMYKCyan: 1, magenta: 1, yellow: 1, black: 0, alpha: 1)
-        
-        // adding interactions to the button
-        newColor.addTarget(self, action: #selector(tappedColor), for: .touchUpInside)
-        newColor.addTarget(self, action: #selector(doubleTappedColor), for: .touchDownRepeat)
-        newColor.addTarget(self, action: #selector(holdColor), for: .touchDown)
-        
-        // add new color to the palette
-        pallete.addArrangedSubview(newColor)
-        
-        // add the color to the new button
-        selected = pallete.subviews.count - 1
-        
-        // save to firebase
-        
-        
-    }
-    
     @IBAction func generateColors(_ sender: UIButton) {
         
         // TODO: Change to getting hsb from locked colors
@@ -171,15 +138,49 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                 color.backgroundColor = UIColor(hue: CGFloat.random(in: 0.0...1.0), saturation: CGFloat.random(in: 0.0...1.0), brightness: CGFloat.random(in: 0.0...1.0), alpha: 1.0)
             }
         }
+        
+        // save palette
+        savePalette()
     }
     
-    // MARK: - Actions
+    // functions
+    func new(color: UIColor) {
+        // creating new button
+        let newColor = UIButton()
+        newColor.backgroundColor = color
+        newColor.layer.borderColor = CGColor(genericCMYKCyan: 1, magenta: 1, yellow: 1, black: 0, alpha: 1)
+        
+        // adding interactions to the button
+        newColor.addTarget(self, action: #selector(tappedColor), for: .touchUpInside)
+        newColor.addTarget(self, action: #selector(doubleTappedColor), for: .touchDownRepeat)
+        newColor.addTarget(self, action: #selector(holdColor), for: .touchDown)
+        
+        // add new color to the palette
+        pallete.addArrangedSubview(newColor)
+        
+        // add the color to the new button
+        selected = pallete.subviews.count - 1
+        
+    }
+    func savePalette(){
+        var paletteString = ""
+        for color in pallete.subviews {
+            paletteString.append("#\((color.backgroundColor?.getHex())!)")
+        }
+        storage.child("Projects/projectName/palette.txt").putData(paletteString.data(using: .utf16)!, metadata: nil) { _, error in
+            guard error == nil else {
+                print("There was an issue")
+                return
+            }
+        }
+    }
+    
+    // MARK: - Palette Actions
     @objc private func tappedColor(_ sender: UIButton) {
         // user is not holding the color but is tapping
         holding = false
         
         // use selected color to sketch with
-        // TODO: Change hardcoded tool and width
         toolPicker.selectedTool = PKInkingTool(ink.inkType, color: sender.backgroundColor!, width: ink.width)
         
         // hightlight selected color
@@ -205,7 +206,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // waiting 2 seconds to see if user is still holding down the color
         Wait(duration: 1.5) {
             if self.holding {
-                self.animateIn(desiredView: self.Edit)
+                self.animation.animateIn(desiredView: self.Edit, on: self.view)
                 // convert UIColor TO HEX
                 self.Hex.text = "#\(sender.backgroundColor!.getHex())"
                 // show chosen color
@@ -223,10 +224,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         }
     }
     
-    // MARK: NavBar
+    // MARK: - NavBar
     @IBAction func Settings(_ sender: UIBarButtonItem) {
-        animateIn(desiredView: Blur)
-        animateIn(desiredView: Popup)
+        animation.animateIn(desiredView: Blur, on: self.view)
+        animation.animateIn(desiredView: Popup, on: self.view)
     }
     
     // MARK: - Tools
@@ -243,66 +244,58 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     }
     
     // MARK: - Popups
+    // Settings
     @IBAction func Done(_ sender: UIButton) {
-        animateOut(desiredView: Popup)
-        animateOut(desiredView: Blur)
+        animation.animateOut(desiredView: Popup)
+        animation.animateOut(desiredView: Blur)
         
     }
     
+    // Edit Color
     @IBAction func CloseEdit(_ sender: UIButton) {
-        animateOut(desiredView: Edit)
+        animation.animateOut(desiredView: Edit)
     }
     @IBAction func LockEdit(_ sender: UIButton) {
         
     }
     @IBAction func DuplicateEdit(_ sender: UIButton) {
         new(color: pallete.subviews[selected].backgroundColor!)
+        savePalette()
     }
     @IBAction func DeleteEdit(_ sender: UIButton) {
         pallete.subviews[selected].removeFromSuperview()
         Edit.removeFromSuperview()
+        savePalette()
     }
     
-    
-    // MARK: - Animations
-    func animateIn(desiredView: UIView) {
-        // get background
-        let backgroundView = self.view!
-        
-        // add popup and blur and supview
-        backgroundView.addSubview(desiredView)
-        
-        // start values of view before animation
-        desiredView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-        desiredView.alpha = 0
-        desiredView.center = backgroundView.center
-        
-        // animate
-        UIView.animate(withDuration: 0.3) {
-            desiredView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-            desiredView.alpha = 1
-        }
-    }
-    func animateOut(desiredView: UIView){
-        UIView.animate(withDuration: 0.3) {
-            desiredView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-            desiredView.alpha = 0
-
-        } completion: { _ in
-            desiredView.removeFromSuperview()
-        }
-
-    }
     
     // MARK: - Saving Sketch Data
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         
         // saves drawing every time user edits the canvas
-        drawing = canvasView.drawing.dataRepresentation()
+        saveSketch(data: canvasView.drawing.dataRepresentation())
         
-        // DRAWING
+        // Get Snapshot //
+        // begin convertion of drawing to bitmap
+        UIGraphicsBeginImageContextWithOptions(canvasView.bounds.size, false, UIScreen.main.scale)
+        // get the snapshot of image
+        canvasView.drawHierarchy(in: canvasView.bounds, afterScreenUpdates: true)
+        // get snapshot from uigraphics and end
+        let snapshot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        // make sure the snapshot is not nil
+        if snapshot != nil {
+            // turn snapshot into data
+            guard let snapData = snapshot?.pngData() else {return}
+            // send data to firebase
+            saveImage(data: snapData)
+        }
+        
+    }
+    
+    func saveSketch(data: Data){
         // saves drawing as data to database
-        storage.child("Projects/projectName/sketch.drawing").putData(drawing, metadata: nil) { _, error in
+        storage.child("Projects/projectName/sketch.drawing").putData(data, metadata: nil) { _, error in
             guard error == nil else {
                 print("There was an issue")
                 return
@@ -317,79 +310,15 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
 //            }
         }
         
-        // SNAPSHOT
-        // begin convertion of drawing to bitmap
-        UIGraphicsBeginImageContextWithOptions(canvasView.bounds.size, false, UIScreen.main.scale)
-        // get the snapshot of image
-        canvasView.drawHierarchy(in: canvasView.bounds, afterScreenUpdates: true)
-        // get snapshot from uigraphics and end
-        let snapshot = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        // make sure the snapshot is not nil
-        if snapshot != nil {
-            // turn snapshot into data
-            guard let snapData = snapshot?.pngData() else {return}
-            // send data to firebase
-            storage.child("Projects/projectName/snapshot.png").putData(snapData, metadata: nil) { _, error in
-                guard error == nil else {
-                    print("There was an issue")
-                    return
-                }
+    }
+    func saveImage(data: Data) {
+        storage.child("Projects/projectName/snapshot.png").putData(data, metadata: nil) { _, error in
+            guard error == nil else {
+                print("There was an issue")
+                return
             }
         }
-        
     }
 
-}
-
-extension UIColor{
-    func getHex() -> String {
-        // hexadecimal chart
-        let hexadecimal = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"]
-        // get colors info
-        var r: CGFloat = 0.0
-        var g: CGFloat = 0.0
-        var b: CGFloat = 0.0
-        var a: CGFloat = 0.0
-        self.getRed(&r, green: &g, blue: &b, alpha: &a)
-        
-        // convert to Ints
-        let red = Int(r*255)
-        let green = Int(g*255)
-        let blue = Int(b*255)
-        
-        // multiply by 16 get the Ints
-        let r1 = Int(red/16)
-        let g1 = Int(green/16)
-        let b1 = Int(blue/16)
-        // get the remainder
-        let r2 = red%16
-        let g2 = green%16
-        let b2 = blue%16
-        // take first half and second halves and convert to hexiadecimal
-        return "\(hexadecimal[r1])\(hexadecimal[r2])\(hexadecimal[g1])\(hexadecimal[g2])\(hexadecimal[b1])\(hexadecimal[b2])"
-    }
-    
-    func convertRGB(from hex: String) -> UIColor {
-        // hexadecimal chart
-        let hexadecimal = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"]
-        
-        let r1 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 0)]))!
-        let r2 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 1)]))!
-        let red = (r1 * 16) + r2
-        
-        let g1 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 2)]))!
-        let g2 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 3)]))!
-        let green = (g1 * 16) + g2
-        
-        let b1 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 4)]))!
-        let b2 = hexadecimal.firstIndex(of: String(hex[hex.index(hex.startIndex, offsetBy: 5)]))!
-        let blue = (b1 * 16) + b2
-        
-        
-        let color = UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: 1.0)
-        
-        return color
-    }
 }
 

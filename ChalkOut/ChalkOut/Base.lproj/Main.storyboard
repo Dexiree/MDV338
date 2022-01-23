@@ -249,7 +249,13 @@
                             <constraint firstItem="ZJg-dh-dsv" firstAttribute="leading" secondItem="3HF-uQ-Qoe" secondAttribute="leading" id="ONC-s4-hLh"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="ZsV-pc-bLw"/>
+                    <navigationItem key="navigationItem" id="ZsV-pc-bLw">
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="UHi-0Z-LqJ">
+                            <connections>
+                                <action selector="addNewProject:" destination="gwf-wf-CcN" id="abN-sV-ZKB"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="projectsCollection" destination="ZJg-dh-dsv" id="JVI-CW-d7l"/>
                     </connections>

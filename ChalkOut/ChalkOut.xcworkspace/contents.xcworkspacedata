@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/dexiree/Documents/GitHub/MDV338/ChalkOut/Animations.swift">
+   </FileRef>
+   <FileRef
       location = "group:ChalkOut.xcodeproj">
    </FileRef>
    <FileRef
