@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseStorage
+import PencilKit
 
 class ProjectsViewController: UIViewController {
     
@@ -17,6 +18,8 @@ class ProjectsViewController: UIViewController {
     private let storage = Storage.storage().reference()
     var numOfProjects = 0
     var thumbnail = UIImage(systemName: "scribble")
+    var projects = [String]()
+    var chosenProject = ""
     
 
     override func viewDidLoad() {
@@ -28,7 +31,7 @@ class ProjectsViewController: UIViewController {
         // set layout for cells
         var layout: UICollectionViewFlowLayout {
             let flow = UICollectionViewFlowLayout()
-            flow.itemSize = CGSize(width: self.view.bounds.width / 4, height: self.view.bounds.height / 10)
+            flow.itemSize = CGSize(width: self.view.bounds.width / 4, height: self.view.bounds.height / 4)
             flow.minimumInteritemSpacing = 1
             flow.minimumLineSpacing = 1
             flow.scrollDirection = .vertical
@@ -41,15 +44,20 @@ class ProjectsViewController: UIViewController {
         projectsCollection.dataSource = self
         
         // load data from database
-        storage.child("drawings").listAll { list, error in
+        storage.child("Projects").listAll { list, error in
             guard error == nil else {
                 print("ERROR")
                 return
             }
             // getting the number of projects in the database
-            self.numOfProjects = list.items.capacity
+            self.numOfProjects = list.prefixes.capacity
+            
+            // getting the name of each project in the database
+            for prefixes in list.prefixes {
+                self.projects.append(prefixes.name)
+            }
         }
-        storage.child("drawings/snapshot.png").getData(maxSize: 10 * 1024 * 1024) { data, error in
+        storage.child("Projects/projectName/snapshot.png").getData(maxSize: 10 * 1024 * 1024) { data, error in
             
             // if error
             guard let data = data, error == nil else {
@@ -65,17 +73,6 @@ class ProjectsViewController: UIViewController {
             self.projectsCollection.reloadData()
         }
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
@@ -84,7 +81,32 @@ extension ProjectsViewController: UICollectionViewDelegate {
         
         projectsCollection.deselectItem(at: indexPath, animated: true)
         
-        print("Tapped")
+        let selected = (indexPath[0]*4) + indexPath[1]
+        chosenProject = projects[selected]
+        print("Tapped \(projects[selected])")
+        
+        // send info to canvasView
+        if let canvas = navigationController?.viewControllers[0] as? ViewController {
+            // load data as drawing
+            storage.child("Projects/\(chosenProject)/sketch.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
+
+                // if error
+                guard let data = data, error == nil else {
+                    print("There was an issue")
+                    return
+                }
+
+                // get data
+                print("Data: \(data)")
+                if let loadDrawing = try? PKDrawing(data: data){
+                    canvas.canvasView.drawing = loadDrawing
+                }
+            }
+        }
+        
+        // pop view
+        navigationController?.popViewController(animated: true)
+        
     }
 }
 extension ProjectsViewController: UICollectionViewDataSource {

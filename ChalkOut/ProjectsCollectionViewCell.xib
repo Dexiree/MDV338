@@ -22,11 +22,12 @@
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="H57-Jm-qg0" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="CZe-Mh-EjO"/>
-                <constraint firstItem="H57-Jm-qg0" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="W87-dL-Akt"/>
-                <constraint firstAttribute="trailing" secondItem="H57-Jm-qg0" secondAttribute="trailing" id="hH4-CS-jRq"/>
-                <constraint firstAttribute="bottom" secondItem="H57-Jm-qg0" secondAttribute="bottom" id="vbD-VX-IgU"/>
+                <constraint firstItem="H57-Jm-qg0" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="5fH-D6-5Zs"/>
+                <constraint firstItem="H57-Jm-qg0" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="DtS-vA-9yb"/>
+                <constraint firstAttribute="bottom" secondItem="H57-Jm-qg0" secondAttribute="bottom" id="VAl-BU-pYm"/>
+                <constraint firstAttribute="trailing" secondItem="H57-Jm-qg0" secondAttribute="trailing" id="qz8-TW-lJE"/>
             </constraints>
             <size key="customSize" width="218" height="205"/>
             <connections>

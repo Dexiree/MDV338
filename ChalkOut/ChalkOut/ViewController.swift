@@ -329,7 +329,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     @IBAction func LockEdit(_ sender: UIButton) {
         
         // load data as drawing
-        storage.child("drawings/file.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
+        storage.child("Projects/projectName/sketch.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
 
             // if error
             guard let data = data, error == nil else {
@@ -383,13 +383,38 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
 
     }
     
+    
+    
+//    func unwindToRoot(segue: UIStoryboardSegue)
+//        {
+//            // get info from the source view controller
+//            let source = segue.source as! ProjectsViewController
+//            print("HERE")
+//            // load data as drawing
+//            storage.child("Projects/\(source.chosenProject)/sketch.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
+//
+//                // if error
+//                guard let data = data, error == nil else {
+//                    print("There was an issue")
+//                    return
+//                }
+//
+//                // get data
+//                print("Data: \(data)")
+//                if let loadDrawing = try? PKDrawing(data: data){
+//                    self.canvasView.drawing = loadDrawing
+//                }
+//            }
+//            
+//        }
+    
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         // saves drawing every time user edits the canvas
         drawing = canvasView.drawing.dataRepresentation()
         
         // DRAWING
         // saves drawing as data to database
-        storage.child("drawings/file.drawing").putData(drawing, metadata: nil) { _, error in
+        storage.child("Projects/projectName/sketch.drawing").putData(drawing, metadata: nil) { _, error in
             guard error == nil else {
                 print("There was an issue")
                 return
@@ -417,7 +442,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
             // turn snapshot into data
             guard let snapData = snapshot?.pngData() else {return}
             // send data to firebase
-            storage.child("drawings/snapshot.png").putData(snapData, metadata: nil) { _, error in
+            storage.child("Projects/projectName/snapshot.png").putData(snapData, metadata: nil) { _, error in
                 guard error == nil else {
                     print("There was an issue")
                     return
