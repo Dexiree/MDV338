@@ -16,6 +16,7 @@ class ProjectsViewController: UIViewController {
     // VARIABLES
     private let storage = Storage.storage().reference()
     var numOfProjects = 0
+    var thumbnail = UIImage(systemName: "scribble")
     
 
     override func viewDidLoad() {
@@ -47,6 +48,20 @@ class ProjectsViewController: UIViewController {
             }
             // getting the number of projects in the database
             self.numOfProjects = list.items.capacity
+        }
+        storage.child("drawings/snapshot.png").getData(maxSize: 10 * 1024 * 1024) { data, error in
+            
+            // if error
+            guard let data = data, error == nil else {
+                print("There was an issue")
+                return
+            }
+
+            // get data
+            if let snapshot = UIImage(data: data){
+                self.thumbnail = snapshot
+            }
+            // reload collectionView
             self.projectsCollection.reloadData()
         }
     }
@@ -80,7 +95,7 @@ extension ProjectsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = projectsCollection.dequeueReusableCell(withReuseIdentifier: ProjectsCollectionViewCell.identifier, for: indexPath) as! ProjectsCollectionViewCell
-        cell.configure(with: UIImage(systemName: "person.circle")!)
+        cell.configure(with: thumbnail!)
         
         return cell
     }

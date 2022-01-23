@@ -74,7 +74,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // Edit
         Edit.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.75, height: self.view.bounds.height * 0.3)
         Edit.layer.cornerRadius = 20
-        // Tools
+        // TODO: DELETE THIS
         Tools.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.5, height: self.view.bounds.height * 0.25)
         Tools.layer.cornerRadius = 20
         
@@ -387,6 +387,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // saves drawing every time user edits the canvas
         drawing = canvasView.drawing.dataRepresentation()
         
+        // DRAWING
         // saves drawing as data to database
         storage.child("drawings/file.drawing").putData(drawing, metadata: nil) { _, error in
             guard error == nil else {
@@ -403,7 +404,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
 //            }
         }
         
-        // save snapshot of drawing as data to database
+        // SNAPSHOT
         // begin convertion of drawing to bitmap
         UIGraphicsBeginImageContextWithOptions(canvasView.bounds.size, false, UIScreen.main.scale)
         // get the snapshot of image
@@ -420,14 +421,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                 guard error == nil else {
                     print("There was an issue")
                     return
-                }
-                
-                self.storage.child("drawings/snapshot.png").downloadURL { url, error in
-                    guard let url = url, error == nil else {
-                        return
-                    }
-                    let urlString = url.absoluteString
-                    print("Download: \(urlString)")
                 }
             }
         }
