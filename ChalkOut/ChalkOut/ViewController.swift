@@ -18,14 +18,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     @IBOutlet var Popup: UIView!
     @IBOutlet var Edit: UIView!
-    @IBOutlet var Tools: UIView!
     @IBOutlet var Blur: UIVisualEffectView!
     
     @IBOutlet weak var Hex: UILabel!
     @IBOutlet weak var colorEdit: UIView!
-    
-    @IBOutlet weak var toolsPicker: UISegmentedControl!
-    @IBOutlet weak var editingToolsPicker: UISegmentedControl!
     
     
     
@@ -49,8 +45,9 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         }()
     var selectedColor = UIColor.black
     let colorPicker = UIColorPickerViewController()
-    
     var ink = PKInkingTool(.pencil)
+    
+    var projectName = "Untiled"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,11 +55,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         canvasView.delegate = self
         // for testing purposes allow fingers to draw
         canvasView.drawingPolicy = .anyInput
-        
-        // tool picker
-        toolPicker.setVisible(true, forFirstResponder: canvasView)
-        toolPicker.addObserver(canvasView)
-        canvasView.becomeFirstResponder()
         
         // color picker
         colorPicker.delegate = self
@@ -74,10 +66,18 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // Edit
         Edit.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.75, height: self.view.bounds.height * 0.3)
         Edit.layer.cornerRadius = 20
-        // TODO: DELETE THIS
-        Tools.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.5, height: self.view.bounds.height * 0.25)
-        Tools.layer.cornerRadius = 20
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        // tool picker
+        toolPicker.setVisible(true, forFirstResponder: canvasView)
+        toolPicker.addObserver(canvasView)
+        canvasView.becomeFirstResponder()
+        
+        // display project name
+        navigationItem.title = projectName
     }
     
     // Hides home button
@@ -242,13 +242,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         animateIn(desiredView: Blur)
         animateIn(desiredView: Popup)
     }
-    @IBAction func ChooseTool(_ sender: UIBarButtonItem) {
-        print("CLICKED")
-    }
-    @IBAction func ToolBtn(_ sender: UIButton) {
-        animateIn(desiredView: Blur)
-        animateIn(desiredView: Tools)
-    }
     
     // MARK: - Tools
     func toolPickerSelectedToolDidChange(_ toolPicker: PKToolPicker) {
@@ -262,53 +255,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
             print("LASSO: \(lasso)")
         }
     }
-    // TODO: Delete this
-    @IBAction func changeTool(_ sender: UISegmentedControl) {
-        let tool = sender.selectedSegmentIndex
-        
-        switch tool {
-        case 0:
-            ink = PKInkingTool(.pencil, color: selectedColor)
-            
-            editingToolsPicker.selectedSegmentTintColor = .clear
-            sender.selectedSegmentTintColor = .white
-        case 1:
-            ink = PKInkingTool(.pen, color: selectedColor)
-            editingToolsPicker.selectedSegmentTintColor = .clear
-            sender.selectedSegmentTintColor = .white
-        case 2:
-            ink = PKInkingTool(.marker, color: selectedColor)
-            editingToolsPicker.selectedSegmentTintColor = .clear
-            sender.selectedSegmentTintColor = .white
-        default:
-            ink = PKInkingTool(.pencil)
-        }
-        
-        canvasView.tool = ink
-    }
-    @IBAction func changeEditingTool(_ sender: UISegmentedControl) {
-        let tool = sender.selectedSegmentIndex
-        
-        switch tool {
-        case 0:
-            canvasView.tool = PKEraserTool(.bitmap)
-            toolsPicker.selectedSegmentTintColor = .clear
-            sender.selectedSegmentTintColor = .white
-        case 1:
-            canvasView.tool = PKEraserTool(.vector)
-            toolsPicker.selectedSegmentTintColor = .clear
-            sender.selectedSegmentTintColor = .white
-        case 2:
-            canvasView.tool =  PKLassoTool()
-            toolsPicker.selectedSegmentTintColor = .clear
-            sender.selectedSegmentTintColor = .white
-        default:
-            return
-        }
-    }
-    
-    
-    
     
     // MARK: - Popups
     @IBAction func Done(_ sender: UIButton) {
@@ -316,12 +262,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         animateOut(desiredView: Blur)
         
     }
-    
-    @IBAction func CloseTools(_ sender: UIButton) {
-        animateOut(desiredView: Tools)
-        animateOut(desiredView: Blur)
-    }
-    
     
     @IBAction func CloseEdit(_ sender: UIButton) {
         animateOut(desiredView: Edit)
@@ -383,32 +323,8 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
 
     }
     
-    
-    
-//    func unwindToRoot(segue: UIStoryboardSegue)
-//        {
-//            // get info from the source view controller
-//            let source = segue.source as! ProjectsViewController
-//            print("HERE")
-//            // load data as drawing
-//            storage.child("Projects/\(source.chosenProject)/sketch.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
-//
-//                // if error
-//                guard let data = data, error == nil else {
-//                    print("There was an issue")
-//                    return
-//                }
-//
-//                // get data
-//                print("Data: \(data)")
-//                if let loadDrawing = try? PKDrawing(data: data){
-//                    self.canvasView.drawing = loadDrawing
-//                }
-//            }
-//            
-//        }
-    
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
+        
         // saves drawing every time user edits the canvas
         drawing = canvasView.drawing.dataRepresentation()
         

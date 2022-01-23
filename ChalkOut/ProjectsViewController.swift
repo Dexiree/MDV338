@@ -19,7 +19,6 @@ class ProjectsViewController: UIViewController {
     var numOfProjects = 0
     var thumbnail = UIImage(systemName: "scribble")
     var projects = [String]()
-    var chosenProject = ""
     
 
     override func viewDidLoad() {
@@ -82,11 +81,13 @@ extension ProjectsViewController: UICollectionViewDelegate {
         projectsCollection.deselectItem(at: indexPath, animated: true)
         
         let selected = (indexPath[0]*4) + indexPath[1]
-        chosenProject = projects[selected]
+        let chosenProject = projects[selected]
         print("Tapped \(projects[selected])")
         
         // send info to canvasView
         if let canvas = navigationController?.viewControllers[0] as? ViewController {
+            // send project Name to root ViewController
+            canvas.projectName = chosenProject
             // load data as drawing
             storage.child("Projects/\(chosenProject)/sketch.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
 
