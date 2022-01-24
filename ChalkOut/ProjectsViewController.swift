@@ -17,7 +17,6 @@ class ProjectsViewController: UIViewController {
     // VARIABLES
     private let storage = Storage.storage().reference()
     var numOfProjects = 0
-    var thumbnail = UIImage(systemName: "scribble")
     var snapshots = [UIImage(systemName: "scribble")]
     var projects = [String]()
     
@@ -60,22 +59,22 @@ class ProjectsViewController: UIViewController {
             self.loadImage()
         }
         
-        
-        
     }
     
     func loadImage(){
         snapshots.removeAll()
-        // getting snapshot from database
+        // TODO: Testing if image is downloading (delete later)
         for project in projects {
             storage.child("Projects/\(project)/snapshot.png").downloadURL { url, error in
                 guard let url = url, error == nil else {
                     return
                 }
-                
+
                 let urlString = url.absoluteString
                 print("Download: \(urlString)")
             }
+            
+            // getting snapshot from database
             storage.child("Projects/\(project)/snapshot.png").getData(maxSize: 10 * 1024 * 1024) { data, error in
                 
                 // if error
@@ -88,13 +87,12 @@ class ProjectsViewController: UIViewController {
                 if let snapshot = UIImage(data: data){
                     self.snapshots.append(snapshot)
                     
-                    if self.snapshots.count == self.projects.count{
-                        // reload collectionView
-                        self.projectsCollection.reloadData()
-                    }
-                    print("SNAPSHOT: \(snapshot)")
+                    
                 }
-                
+                // reload collectionView
+                if self.snapshots.count == self.projects.count{
+                    self.projectsCollection.reloadData()
+                }
             }
             
         }
@@ -232,6 +230,7 @@ extension ProjectsViewController: UICollectionViewDataSource {
         //snapshots.append(thumbnail!)
         print("PROJECTS: \(projects.count) SNAPSHOTS: \(snapshots.count)")
         let i = (indexPath[0] * 4) + indexPath[1]
+        print(i)
         cell.configure(with: snapshots[i]!)
         
         return cell
