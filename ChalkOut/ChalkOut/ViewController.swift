@@ -95,7 +95,8 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         toolPicker.selectedTool = ink
         
         //save color palette to Firebase
-        savePalette()
+        let paletteData = getPaletteColors()
+        savePalette(data: paletteData)
     }
     
     // buttons
@@ -140,7 +141,8 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         }
         
         // save palette
-        savePalette()
+        let paletteData = getPaletteColors()
+        savePalette(data: paletteData)
     }
     
     // functions
@@ -162,12 +164,17 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         selected = pallete.subviews.count - 1
         
     }
-    func savePalette(){
+    func getPaletteColors() -> Data{
         var paletteString = ""
+        // convert all the colors to hex
         for color in pallete.subviews {
             paletteString.append("#\((color.backgroundColor?.getHex())!)")
         }
-        storage.child("Projects/projectName/palette.txt").putData(paletteString.data(using: .utf16)!, metadata: nil) { _, error in
+        // save hex as data
+        return paletteString.data(using: .utf16)!
+    }
+    func savePalette(data: Data){
+        storage.child("Projects/\(projectName)/palette.txt").putData(data, metadata: nil) { _, error in
             guard error == nil else {
                 print("There was an issue")
                 return
@@ -260,12 +267,14 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     }
     @IBAction func DuplicateEdit(_ sender: UIButton) {
         new(color: pallete.subviews[selected].backgroundColor!)
-        savePalette()
+        let paletteData = getPaletteColors()
+        savePalette(data: paletteData)
     }
     @IBAction func DeleteEdit(_ sender: UIButton) {
         pallete.subviews[selected].removeFromSuperview()
         Edit.removeFromSuperview()
-        savePalette()
+        let paletteData = getPaletteColors()
+        savePalette(data: paletteData)
     }
     
     
@@ -293,9 +302,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
     }
     
+    // saving functions
     func saveSketch(data: Data){
         // saves drawing as data to database
-        storage.child("Projects/projectName/sketch.drawing").putData(data, metadata: nil) { _, error in
+        storage.child("Projects/\(projectName)/sketch.drawing").putData(data, metadata: nil) { _, error in
             guard error == nil else {
                 print("There was an issue")
                 return
@@ -312,7 +322,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
     }
     func saveImage(data: Data) {
-        storage.child("Projects/projectName/snapshot.png").putData(data, metadata: nil) { _, error in
+        storage.child("Projects/\(projectName)/snapshot.png").putData(data, metadata: nil) { _, error in
             guard error == nil else {
                 print("There was an issue")
                 return
