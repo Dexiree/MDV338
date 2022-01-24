@@ -3,6 +3,7 @@
     <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -250,17 +251,123 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ZsV-pc-bLw">
-                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="UHi-0Z-LqJ">
-                            <connections>
-                                <action selector="addNewProject:" destination="gwf-wf-CcN" id="abN-sV-ZKB"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem style="plain" systemItem="add" id="UHi-0Z-LqJ">
+                                <connections>
+                                    <action selector="addNewProject:" destination="gwf-wf-CcN" id="abN-sV-ZKB"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="login" id="wgl-f0-wHf">
+                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="4Fx-eD-pqA">
+                                    <rect key="frame" x="587.5" y="8" width="185" height="34.5"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain" title=" Login/Signup">
+                                        <imageReference key="image" image="person.circle" catalog="system" symbolScale="large"/>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="showLoginSignup:" destination="gwf-wf-CcN" eventType="touchUpInside" id="4lK-1K-Elj"/>
+                                    </connections>
+                                </button>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="emailField" destination="oJu-B3-7Wf" id="19a-3T-dsQ"/>
+                        <outlet property="errorLabel" destination="LGA-pf-SsH" id="wu3-tl-Kqz"/>
+                        <outlet property="loginCreateBtnName" destination="gyD-0U-B98" id="peX-I2-W3z"/>
+                        <outlet property="loginSignup" destination="ng3-kB-Xnq" id="Vnu-VR-jAV"/>
+                        <outlet property="loginSignupView" destination="1YM-qG-wQC" id="ttB-pt-VNB"/>
+                        <outlet property="passwordField" destination="sv3-l8-Le1" id="FX5-y1-zRt"/>
                         <outlet property="projectsCollection" destination="ZJg-dh-dsv" id="JVI-CW-d7l"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EGT-3N-wC4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="1YM-qG-wQC">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="302"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="yCl-BQ-Zhb">
+                            <rect key="frame" x="10" y="24" width="220" height="268"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ng3-kB-Xnq">
+                                    <rect key="frame" x="0.0" y="0.0" width="220" height="41.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="lB0-c9-ska">
+                                    <rect key="frame" x="0.0" y="51.5" width="220" height="29"/>
+                                    <segments>
+                                        <segment title="Login"/>
+                                        <segment title="Sign Up"/>
+                                    </segments>
+                                    <connections>
+                                        <action selector="loginSignupSegments:" destination="gwf-wf-CcN" eventType="valueChanged" id="Czr-Ht-88G"/>
+                                    </connections>
+                                </segmentedControl>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="N6g-ju-Ckx">
+                                    <rect key="frame" x="0.0" y="88" width="220" height="21"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
+                                </imageView>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oJu-B3-7Wf">
+                                    <rect key="frame" x="0.0" y="117" width="220" height="27.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </textField>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sv3-l8-Le1">
+                                    <rect key="frame" x="0.0" y="154.5" width="220" height="28"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </textField>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gyD-0U-B98">
+                                    <rect key="frame" x="0.0" y="192.5" width="220" height="27.5"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="filled" title="Login" titleAlignment="center">
+                                        <fontDescription key="titleFontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="loginSignupBtn:" destination="gwf-wf-CcN" eventType="touchUpInside" id="gzI-7N-yW4"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WmI-Ga-KPG">
+                                    <rect key="frame" x="0.0" y="230" width="220" height="14"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal" title="Cancel">
+                                        <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="cancelBtn:" destination="gwf-wf-CcN" eventType="touchUpInside" id="zxh-fw-phk"/>
+                                    </connections>
+                                </button>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="error" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LGA-pf-SsH">
+                                    <rect key="frame" x="0.0" y="254" width="220" height="14"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="gyD-0U-B98" firstAttribute="height" secondItem="sv3-l8-Le1" secondAttribute="height" id="CtX-y8-ZBK"/>
+                                <constraint firstItem="LGA-pf-SsH" firstAttribute="height" secondItem="WmI-Ga-KPG" secondAttribute="height" id="TtS-AP-Upc"/>
+                                <constraint firstItem="ng3-kB-Xnq" firstAttribute="height" secondItem="lB0-c9-ska" secondAttribute="height" multiplier="1.5" id="WBd-ml-XEr"/>
+                                <constraint firstItem="WmI-Ga-KPG" firstAttribute="height" secondItem="gyD-0U-B98" secondAttribute="height" multiplier="0.5" id="fY1-xK-5UF"/>
+                                <constraint firstItem="sv3-l8-Le1" firstAttribute="height" secondItem="oJu-B3-7Wf" secondAttribute="height" id="hgb-N9-pHh"/>
+                                <constraint firstItem="oJu-B3-7Wf" firstAttribute="height" secondItem="lB0-c9-ska" secondAttribute="height" id="vQy-Co-fDm"/>
+                            </constraints>
+                        </stackView>
+                    </subviews>
+                    <viewLayoutGuide key="safeArea" id="5V3-wW-kge"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="5V3-wW-kge" firstAttribute="trailing" secondItem="yCl-BQ-Zhb" secondAttribute="trailing" constant="10" id="416-Jn-gLR"/>
+                        <constraint firstItem="5V3-wW-kge" firstAttribute="bottom" secondItem="yCl-BQ-Zhb" secondAttribute="bottom" constant="10" id="AdV-Oh-i7r"/>
+                        <constraint firstItem="yCl-BQ-Zhb" firstAttribute="top" secondItem="5V3-wW-kge" secondAttribute="top" id="K05-ga-xo8"/>
+                        <constraint firstItem="yCl-BQ-Zhb" firstAttribute="leading" secondItem="5V3-wW-kge" secondAttribute="leading" constant="10" id="Vna-eI-BM6"/>
+                        <constraint firstItem="lB0-c9-ska" firstAttribute="height" secondItem="5V3-wW-kge" secondAttribute="height" multiplier="0.1" id="wBr-3m-he9"/>
+                    </constraints>
+                </view>
             </objects>
             <point key="canvasLocation" x="1609" y="82"/>
         </scene>
@@ -287,6 +394,8 @@
         <image name="doc.on.doc.fill" catalog="system" width="116" height="128"/>
         <image name="gearshape.fill" catalog="system" width="128" height="121"/>
         <image name="lock.fill" catalog="system" width="128" height="128"/>
+        <image name="person.circle" catalog="system" width="128" height="121"/>
+        <image name="person.fill" catalog="system" width="128" height="120"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <image name="trash.fill" catalog="system" width="121" height="128"/>
         <image name="xmark.app.fill" catalog="system" width="128" height="114"/>
