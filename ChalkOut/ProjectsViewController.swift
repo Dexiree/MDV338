@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseStorage
 import FirebaseAuth
+import FirebaseFirestore
 import PencilKit
 
 class ProjectsViewController: UIViewController {
@@ -25,12 +26,16 @@ class ProjectsViewController: UIViewController {
     
     // VARIABLES
     private let storage = Storage.storage().reference()
+    private let store = Firestore.firestore()
+    
     var numOfProjects = 0
     var snapshots = [UIImage(systemName: "scribble")]
     var projects = [String]()
-    let animation = Animations()
-    var willLogin = false
     
+    let animation = Animations()
+    var willLogin = true
+    
+    var uid = String()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -176,11 +181,12 @@ class ProjectsViewController: UIViewController {
     
     func signup(){
         if !(emailField.text!.isEmpty) || !(passwordField.text!.isEmpty) {
-            Auth.auth().createUser(withEmail: "\(String(describing: emailField.text))", password: "\(String(describing: passwordField.text))") { result, error in
+            Auth.auth().createUser(withEmail: "\(emailField.text!)", password: "\(passwordField.text!)") { result, error in
                 
                 // check error
                 guard error == nil else {
                     print("ERROR SIGNUP: \(String(describing: error))")
+                    print("EMAIL: \(self.emailField.text!) PASSWORD: \(self.passwordField.text!)")
                     self.errorLabel.text = "error signing up"
                     self.errorLabel.textColor = .red
                     return
@@ -195,8 +201,9 @@ class ProjectsViewController: UIViewController {
             
         }
     }
+    
     func login(){
-        Auth.auth().signIn(withEmail: "myEmail@gmail.com", password: "password") { result, error in
+        Auth.auth().signIn(withEmail: "myEmail@gmail.com", password: "password") { [self] result, error in
             
             // check error
             guard error == nil else {
@@ -208,6 +215,13 @@ class ProjectsViewController: UIViewController {
             
             // success
             print("Successfully Logged in as: \(String(describing: result?.user.uid))")
+            
+            // get uid
+            self.uid = (result?.user.uid)!
+            
+            // get projects info
+            
+            
             self.animation.animateOut(desiredView: self.loginSignupView)
         }
     }
@@ -273,7 +287,7 @@ extension ProjectsViewController: UICollectionViewDelegate {
 
             // if error
             guard let data = data, error == nil else {
-                print("There was an issue")
+                print("ERROR: \(error!)")
                 return
             }
 
@@ -292,7 +306,7 @@ extension ProjectsViewController: UICollectionViewDelegate {
                     // seperating each color into an array
                     for _ in 1...numOfColors {
                         let hexColor = paletteString[start ..< endBefore]
-                        colors.append(UIColor().convertRGB(from: hexColor))
+                        colors.append(UIColor(hex: hexColor))
                         
                         start += 7
                         endBefore += 7

@@ -8,6 +8,7 @@
 import UIKit
 import PencilKit
 import FirebaseStorage
+import FirebaseFirestore
 
 class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserver, UIColorPickerViewControllerDelegate {
     
@@ -25,6 +26,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     // Variables
     private let storage = Storage.storage().reference()
+    private let db = Firestore.firestore()
     //var drawing = Data()
     let animation = Animations()
     
@@ -63,6 +65,62 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // Edit
         Edit.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.75, height: self.view.bounds.height * 0.3)
         Edit.layer.cornerRadius = 20
+        
+        LoadData()
+        
+    }
+    func LoadData(){
+        
+        let user = "SM6dJglgBGR6mrWlr8gWJaEjSiq2"
+        let collection = "SharedProjects/bn7g6xiA9asKTV5nBXMQ/ColorSchemes"
+        let document = "WlZ3bZSnZLpwpeb19LWD"
+        let docRef = db.collection("users/\(user)/\(collection)").document("\(document)")
+        
+        // getting specific document from user
+        docRef.getDocument { snapshot, error in
+            guard let snapshot = snapshot, error == nil else {return print(error.debugDescription)}
+            
+            do {
+                
+                let colorScheme = try ColorSchemes(snapshot: snapshot.data()!)
+                
+                // get palette
+                for hex in colorScheme.palette {
+                    self.new(color: UIColor(hex: hex))
+                }
+                
+                //get sketch
+                let sketch = colorScheme.sketches[0]
+                self.loadSketch(sketch: sketch)
+                
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+        }
+    }
+    
+    func loadSketch(sketch: String) {
+        
+        // convert string to url
+        guard let url = URL(string: sketch) else {
+            print("NO URL")
+            return}
+    
+        do {
+            // convert url to data
+            let data = try Data(contentsOf: url)
+            
+            // convert data to PKDrawing
+            guard let sketch = try? PKDrawing(data: data) else {
+                print("NO DRAWING")
+                return}
+            // load sketch on canvas
+            self.canvasView.drawing = sketch
+            
+        } catch {
+            print("error")
+        }
         
     }
     
@@ -164,6 +222,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         selected = pallete.subviews.count - 1
         
     }
+    
     func getPaletteColors() -> Data{
         var paletteString = ""
         // convert all the colors to hex
@@ -173,6 +232,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // save hex as data
         return paletteString.data(using: .utf16)!
     }
+    
     func savePalette(data: Data){
         storage.child("Projects/\(projectName)/palette.txt").putData(data, metadata: nil) { _, error in
             guard error == nil else {
@@ -241,12 +301,12 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     func toolPickerSelectedToolDidChange(_ toolPicker: PKToolPicker) {
         
         if let inkling = toolPicker.selectedTool as? PKInkingTool {
-            print("INK: \(inkling)")
+            //print("INK: \(inkling)")
             ink = inkling
         } else if let eraser = toolPicker.selectedTool as? PKEraserTool {
-            print("ERASER: \(eraser)")
+            //print("ERASER: \(eraser)")
         } else if let lasso = toolPicker.selectedTool as? PKLassoTool {
-            print("LASSO: \(lasso)")
+            //print("LASSO: \(lasso)")
         }
     }
     
@@ -304,20 +364,24 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     // saving functions
     func saveSketch(data: Data){
-        // saves drawing as data to database
-        storage.child("Projects/\(projectName)/sketch.drawing").putData(data, metadata: nil) { _, error in
+        
+        let sketchRef = "Projects/\(projectName)/sketch.drawing"
+        
+        // saves sketch as data to database
+        storage.child(sketchRef).putData(data, metadata: nil) { _, error in
             guard error == nil else {
                 print("There was an issue")
                 return
             }
             
-//            self.storage.child("drawings/file.drawing").downloadURL { url, error in
-//                guard let url = url, error == nil else {
-//                    return
-//                }
-//                let urlString = url.absoluteString
-//                print("Download: \(urlString)")
-//            }
+            // get url of sketch
+            self.storage.child(sketchRef).downloadURL { url, error in
+                guard let url = url, error == nil else {
+                    return
+                }
+                let urlString = url.absoluteString
+                print("Download: \(urlString)")
+            }
         }
         
     }

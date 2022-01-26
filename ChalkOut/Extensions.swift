@@ -41,8 +41,9 @@ extension UIColor{
         return "\(hexChart[r1])\(hexChart[r2])\(hexChart[g1])\(hexChart[g2])\(hexChart[b1])\(hexChart[b2])"
     }
     
-    func convertRGB(from hex: String) -> UIColor {
-
+    convenience init(hex: String) {
+        self.init()
+        
         let r1 = hexChart.firstIndex(of: hex[0])!
         let r2 = hexChart.firstIndex(of: hex[1])!
         let red = ((CGFloat(r1) * 16) + CGFloat(r2)) / 255.0
@@ -55,10 +56,7 @@ extension UIColor{
         let b2 = hexChart.firstIndex(of: hex[5])!
         let blue = ((CGFloat(b1) * 16) + CGFloat(b2)) / 255.0
         
-        print("RED:\(red), GREEN:\(green), BLUE:\(blue)")
-        let color = UIColor(red: red, green: green, blue: blue, alpha: 1.0)
-        
-        return color
+        self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
 }
 

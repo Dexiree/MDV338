@@ -21,6 +21,7 @@
 		C3A5E44C279C7EBA00E7C509 /* ProjectsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3A5E44A279C7EBA00E7C509 /* ProjectsCollectionViewCell.xib */; };
 		C3A5E44E279DC19700E7C509 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A5E44D279DC19700E7C509 /* Extensions.swift */; };
 		C3A5E450279DED4800E7C509 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A5E44F279DED4800E7C509 /* Animations.swift */; };
+		C3A5E452279F563200E7C509 /* JsonDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3A5E451279F563200E7C509 /* JsonDecoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		C3A5E44A279C7EBA00E7C509 /* ProjectsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectsCollectionViewCell.xib; sourceTree = "<group>"; };
 		C3A5E44D279DC19700E7C509 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C3A5E44F279DED4800E7C509 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Animations.swift; path = /Users/dexiree/Documents/GitHub/MDV338/ChalkOut/Animations.swift; sourceTree = "<absolute>"; };
+		C3A5E451279F563200E7C509 /* JsonDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 		C3286EE527863F1A00A943B0 = {
 			isa = PBXGroup;
 			children = (
+				C3A5E451279F563200E7C509 /* JsonDecoder.swift */,
 				C3A5E44F279DED4800E7C509 /* Animations.swift */,
 				C3A5E44D279DC19700E7C509 /* Extensions.swift */,
 				C3A5E447279C773C00E7C509 /* ProjectsViewController.swift */,
@@ -231,6 +234,7 @@
 			files = (
 				C3286EF627863F1A00A943B0 /* ViewController.swift in Sources */,
 				C3A5E448279C773C00E7C509 /* ProjectsViewController.swift in Sources */,
+				C3A5E452279F563200E7C509 /* JsonDecoder.swift in Sources */,
 				C3A5E44B279C7EBA00E7C509 /* ProjectsCollectionViewCell.swift in Sources */,
 				C39C393727951BB000862A86 /* Filters.swift in Sources */,
 				C3286EF227863F1A00A943B0 /* AppDelegate.swift in Sources */,
