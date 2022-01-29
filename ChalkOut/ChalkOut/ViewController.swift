@@ -90,11 +90,13 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                 let colorScheme = try ColorSchemes(snapshot: data)
                 
                 // get palette
-                let colors = colorScheme.palette.map { UIColor(hex: $0)}
+                guard let palette = colorScheme.palette else {return}
+                let colors = palette.map { UIColor(hex: $0)}
                 self.loadPalette(colors: colors)
                 
                 //get sketch
-                let sketch = colorScheme.sketches[0]
+                guard let sketches = colorScheme.sketches else {return}
+                let sketch = sketches[0]
                 self.loadSketch(sketch: sketch)
                 //let sketch = colorScheme.drawing
                 //self.loadDrawing(sketch: sketch)
@@ -425,7 +427,9 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                 
                 // send sketch link to database
                 self.db.collection(collectionRef).document(self.colorScheme).getDocument { snapshot, error in
-                    guard let snapshot = snapshot, error == nil else {return}
+                    guard let snapshot = snapshot, error == nil else {
+                        print("NO DOCUMENT")
+                        return}
                     guard let data = snapshot.data() else {return}
                     
                     // either update or add sketch
@@ -433,17 +437,20 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                         let colorScheme = try ColorSchemes(snapshot: data)
                         
                         // get all the sketches in the sketches array from database
-                        var sketches = colorScheme.sketches
+                        guard var sketches = colorScheme.sketches else { return }
                         
                         if sketches.count > 0 {
                             // update
                             sketches[self.sketch] = urlString
+
+                            self.db.collection(collectionRef).document(self.colorScheme).updateData(["sketches" : sketches])
                         } else {
                             // add new sketch to database
                             self.db.collection(collectionRef).document(self.colorScheme).updateData(["sketches" : FieldValue.arrayUnion([urlString])])
                         }
+                        
                     } catch {
-                        print(error.localizedDescription)
+                        print("NO DATA: \(error.localizedDescription)")
                     }
                     
                 }

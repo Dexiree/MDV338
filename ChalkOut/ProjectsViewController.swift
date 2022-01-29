@@ -114,7 +114,8 @@ class ProjectsViewController: UIViewController, UITextFieldDelegate {
                 do {
                     let project = try Projects(snapshot: document.data())
                     
-                    self.loadImage(file: project.image)
+                    guard let image = project.image else {return}
+                    self.loadImage(file: image)
                     
                 } catch {
                     print(error.localizedDescription)
@@ -199,6 +200,9 @@ class ProjectsViewController: UIViewController, UITextFieldDelegate {
         // new color shceme
         let collectionRef = "\(userRef)/\(newProjectRef.documentID)/ColorSchemes"
         let colorScheme = db.collection(collectionRef).addDocument(data: ["sketches" : [String]()])
+        
+        // add new palette
+        //colorScheme.setData(["palette" : [String]()])
                 
                 // send new info to the main view
                 if let mainView = navigationController?.viewControllers[0] as? ViewController {
@@ -298,7 +302,13 @@ class ProjectsViewController: UIViewController, UITextFieldDelegate {
             print("Succeful Signed up as: \(String(describing: result?.user.uid))")
             
             //creates new users firestore document
-            self.db.collection("emails").document(self.email).setData(["sharedProjects" : [String]()])
+            self.db.collection("emails").document(self.email).setData(["sharedProjects" : [String]()]) { error in
+                guard error == nil else {return}
+                
+                self.db.collection("emails").document(self.email).setData(["collaborators" : [String]()])
+                self.db.collection("emails").document(self.email).setData(["locked" : false])
+            }
+            
             
             self.animation.animateOut(desiredView: self.loginSignupView)
             self.newUser = true
@@ -337,32 +347,9 @@ class ProjectsViewController: UIViewController, UITextFieldDelegate {
             
             // success
             print("Successfully Logged in as: \(String(describing: user.uid))")
-            // get uid
-            //self.uid = user.uid
             
             // get projects info
-            db.collection("emails/\(user.email)/\(user.uid)").getDocuments { snapshot, error in
-                guard let snapshot = snapshot, error == nil else {
-                    print("Document not found")
-                    return
-                }
-                // save docIds
-                projects = snapshot.documents.map{$0.documentID}
-                
-                // load info on app
-                snapshot.documents.forEach { document in
-                    do {
-                        print("DOCUMENTS: \(document.documentID)")
-                        let project = try Projects(snapshot: document.data())
-                        
-                        loadImage(file: project.image)
-                        
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                }
-                
-            }
+            loadProjects()
             
             
             self.animation.animateOut(desiredView: self.loginSignupView)
@@ -389,13 +376,13 @@ extension ProjectsViewController: UICollectionViewDelegate {
         if let mainView = navigationController?.viewControllers[0] as? ViewController {
             
             // send project Name to root ViewController
-            mainView.projectName = chosenProject
-            
+            mainView.projectID = chosenProject
+            mainView.LoadData()
             // load data as drawing
-            loadSketch(project: chosenProject, for: mainView)
+            //loadSketch(project: chosenProject, for: mainView)
             
             // load data as palette
-            loadPalette(project: chosenProject, for: mainView)
+            //loadPalette(project: chosenProject, for: mainView)
             
         }
         
@@ -405,6 +392,10 @@ extension ProjectsViewController: UICollectionViewDelegate {
     }
     
     func loadSketch(project: String, for view: ViewController) {
+        
+        //db.collection("emails/\(user.email)/\(user.uid)").document(project)
+        
+        
         storage.child("Projects/\(project)/sketch.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
 
             // if error
@@ -476,7 +467,7 @@ extension ProjectsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = projectsCollection.dequeueReusableCell(withReuseIdentifier: ProjectsCollectionViewCell.identifier, for: indexPath) as! ProjectsCollectionViewCell
         
-        print("PROJECTS: \(projects.count) SNAPSHOTS: \(images.count)")
+        print("PROJECTS: \(projects.count) IMAGES: \(images.count)")
         let i = (indexPath[0] * 4) + indexPath[1]
         print(i)
         cell.configure(with: images[i]!)
