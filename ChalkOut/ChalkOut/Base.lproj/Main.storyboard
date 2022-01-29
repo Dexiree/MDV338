@@ -278,7 +278,9 @@
                         <outlet property="loginCreateBtnName" destination="gyD-0U-B98" id="peX-I2-W3z"/>
                         <outlet property="loginSignup" destination="ng3-kB-Xnq" id="Vnu-VR-jAV"/>
                         <outlet property="loginSignupView" destination="1YM-qG-wQC" id="ttB-pt-VNB"/>
+                        <outlet property="newProjectView" destination="Ax5-O4-TN8" id="uhj-S2-vE6"/>
                         <outlet property="passwordField" destination="sv3-l8-Le1" id="FX5-y1-zRt"/>
+                        <outlet property="projectNameField" destination="oZ8-6h-45M" id="OKT-Mm-Ivg"/>
                         <outlet property="projectsCollection" destination="ZJg-dh-dsv" id="JVI-CW-d7l"/>
                     </connections>
                 </viewController>
@@ -366,6 +368,61 @@
                         <constraint firstItem="yCl-BQ-Zhb" firstAttribute="top" secondItem="5V3-wW-kge" secondAttribute="top" id="K05-ga-xo8"/>
                         <constraint firstItem="yCl-BQ-Zhb" firstAttribute="leading" secondItem="5V3-wW-kge" secondAttribute="leading" constant="10" id="Vna-eI-BM6"/>
                         <constraint firstItem="lB0-c9-ska" firstAttribute="height" secondItem="5V3-wW-kge" secondAttribute="height" multiplier="0.1" id="wBr-3m-he9"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" id="Ax5-O4-TN8">
+                    <rect key="frame" x="0.0" y="0.0" width="371" height="163"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zHm-C1-r4W">
+                            <rect key="frame" x="10" y="24" width="351" height="129"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Project" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K5g-fC-1h0">
+                                    <rect key="frame" x="0.0" y="0.0" width="351" height="25"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Project Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oZ8-6h-45M">
+                                    <rect key="frame" x="0.0" y="35" width="351" height="24.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </textField>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nj0-83-aZZ">
+                                    <rect key="frame" x="0.0" y="69.5" width="351" height="25"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="filled" title="Create"/>
+                                    <connections>
+                                        <action selector="createNewProjectBtn:" destination="gwf-wf-CcN" eventType="touchUpInside" id="lF2-oE-1K6"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gQO-7e-a5p">
+                                    <rect key="frame" x="0.0" y="104.5" width="351" height="24.5"/>
+                                    <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain">
+                                        <attributedString key="attributedTitle">
+                                            <fragment content="Cancel">
+                                                <attributes>
+                                                    <font key="NSFont" size="11" name="Helvetica"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="cancelNewProjectBtn:" destination="gwf-wf-CcN" eventType="touchUpInside" id="r88-xg-dpW"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <viewLayoutGuide key="safeArea" id="vWC-Td-frd"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="zHm-C1-r4W" firstAttribute="top" secondItem="vWC-Td-frd" secondAttribute="top" id="7Tl-Tz-i15"/>
+                        <constraint firstItem="zHm-C1-r4W" firstAttribute="leading" secondItem="vWC-Td-frd" secondAttribute="leading" constant="10" id="QlE-Wa-Esn"/>
+                        <constraint firstItem="vWC-Td-frd" firstAttribute="bottom" secondItem="zHm-C1-r4W" secondAttribute="bottom" constant="10" id="Sk3-Qj-EeC"/>
+                        <constraint firstItem="vWC-Td-frd" firstAttribute="trailing" secondItem="zHm-C1-r4W" secondAttribute="trailing" constant="10" id="wKK-i0-4zE"/>
                     </constraints>
                 </view>
             </objects>

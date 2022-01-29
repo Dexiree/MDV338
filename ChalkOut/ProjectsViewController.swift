@@ -11,7 +11,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import PencilKit
 
-class ProjectsViewController: UIViewController {
+class ProjectsViewController: UIViewController, UITextFieldDelegate {
     
     // OUTLETS
     @IBOutlet weak var projectsCollection: UICollectionView!
@@ -23,18 +23,24 @@ class ProjectsViewController: UIViewController {
     @IBOutlet weak var loginSignupView: UIView!
     @IBOutlet weak var errorLabel: UILabel!
     
+    @IBOutlet var newProjectView: UIView!
+    @IBOutlet weak var projectNameField: UITextField!
     
     // VARIABLES
     private let storage = Storage.storage().reference()
-    private let store = Firestore.firestore()
+    private let db = Firestore.firestore()
     
     var numOfProjects = 0
-    var snapshots = [UIImage(systemName: "scribble")]
+    var images = [UIImage(systemName: "scribble")]
     var projects = [String]()
     
     let animation = Animations()
     var willLogin = true
+    var newUser = false
     
+    var email = "test@gmail.com"
+    var password = "password"
+    var user = User(email: "test@gmail.com", uid: "1234")
     var uid = String()
 
     override func viewDidLoad() {
@@ -42,6 +48,10 @@ class ProjectsViewController: UIViewController {
 
         // register the cell
         projectsCollection.register(ProjectsCollectionViewCell.nib(), forCellWithReuseIdentifier: ProjectsCollectionViewCell.identifier)
+        
+        // delegate
+        emailField.delegate = self
+        passwordField.delegate = self
         
         // set layout for cells
         var layout: UICollectionViewFlowLayout {
@@ -58,85 +68,167 @@ class ProjectsViewController: UIViewController {
         projectsCollection.delegate = self
         projectsCollection.dataSource = self
         
-        // popup
+        // Login popup
         loginSignupView.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.5, height: self.view.bounds.height * 0.5)
         loginSignupView.layer.cornerRadius = 20
         
+        // New Project popup
+        newProjectView.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.75, height: self.view.bounds.height * 0.25)
+        newProjectView.layer.cornerRadius = 20
+        
         // load data from database
-        storage.child("Projects").listAll { list, error in
-            guard error == nil else {
-                print("ERROR")
-                return
-            }
-            // getting the number of projects in the database
-            self.numOfProjects = list.prefixes.capacity
-            
-            // getting the name of each project in the database
-            for prefixes in list.prefixes {
-                self.projects.append(prefixes.name)
-                self.loadImage(file: prefixes.name)
-            }
-        }
+        loadProjects()
+//        storage.child("Projects").listAll { list, error in
+//            guard error == nil else {
+//                print("ERROR")
+//                return
+//            }
+//            // getting the number of projects in the database
+//            self.numOfProjects = list.prefixes.capacity
+//
+//            // getting the name of each project in the database
+//            for prefixes in list.prefixes {
+//                self.projects.append(prefixes.name)
+//                self.loadImage(file: prefixes.name)
+//            }
+//        }
         
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return true
+    }
+    
+    func loadProjects() {
+        
+        db.collection("emails/\(user.email)/\(user.uid)").getDocuments { snapshot, error in
+            guard let snapshot = snapshot, error == nil else {
+                print("Document not found")
+                return
+            }
+            // save docIds
+            self.projects = snapshot.documents.map{$0.documentID}
+            
+            // load info on app
+            snapshot.documents.forEach { document in
+                do {
+                    let project = try Projects(snapshot: document.data())
+                    
+                    self.loadImage(file: project.image)
+                    
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+            
+        }
+    }
     func loadImage(file: String){
-        snapshots.removeAll()
+        
+        guard let url = URL(string: file) else {return}
+        
+        do {
+            let data = try Data(contentsOf: url)
+            
+            guard let image = UIImage(data: data) else {
+                print("NO IMAGE")
+                return
+            }
+            
+            images.append(image)
+            projectsCollection.reloadData()
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        
+        //snapshots.removeAll()
         
         // getting snapshot from database
-        storage.child("Projects/\(file)/snapshot.png").getData(maxSize: 10 * 1024 * 1024) { data, error in
-            
-            // if error
-            guard let data = data, error == nil else {
-                print("There was an issue")
-                return
-            }
-
-            // get data
-            if let snapshot = UIImage(data: data){
-                self.snapshots.append(snapshot)
-                
-            }
-            // reload collectionView
-            if self.snapshots.count == self.projects.count{
-                self.projectsCollection.reloadData()
-            }
-        }
+//        storage.child("Projects/\(file)/snapshot.png").getData(maxSize: 10 * 1024 * 1024) { data, error in
+//
+//            // if error
+//            guard let data = data, error == nil else {
+//                print("There was an issue")
+//                return
+//            }
+//
+//            // get data
+//            if let snapshot = UIImage(data: data){
+//                self.snapshots.append(snapshot)
+//
+//            }
+//            // reload collectionView
+//            if self.snapshots.count == self.projects.count{
+//                self.projectsCollection.reloadData()
+//            }
+//        }
         
     }
     
+    // MARK: - Add New Project
     @IBAction func addNewProject(_ sender: UIBarButtonItem) {
-//         Project Name
-        let newName = "newProject"
-//         sketch.drawing
-        let newSketch = PKCanvasView().drawing.dataRepresentation()
-//         snapshot.png
-        let newSnapshot = UIImage(systemName: "scribble")?.pngData()
-//         palette.txt
-        let paletteString = ""
-        let newPalette = paletteString.data(using: .utf16)!
         
-        
-        // save than send new info to the main view
-        if let mainView = navigationController?.viewControllers[0] as? ViewController {
-            
-            // save to name
-            mainView.projectName = newName
-            // save sketch
-            mainView.saveSketch(data: newSketch)
-            // save snapshot
-            mainView.saveImage(data: newSnapshot!)
-            // save palette
-            mainView.savePalette(data: newPalette)
-            
-            //loadSketch(project: newName, for: mainView)
-            
-        }
-        
-        // pop view
-        navigationController?.popViewController(animated: true)
+        // open popup
+        animation.animateIn(desiredView: newProjectView, on: self.view)
         
     }
+    
+    @IBAction func createNewProjectBtn(_ sender: UIButton) {
+        
+        //         Project Name
+                var newName = "Untitled"
+        if !(projectNameField.text!.isEmpty) || !(projectNameField.text == "") {
+            newName = projectNameField.text!
+        }
+        
+        //         create new sketch.drawing
+                let newSketch = PKCanvasView().drawing.dataRepresentation()
+        //         create new image.png
+                let newImage = UIImage(systemName: "scribble")?.pngData()
+                
+        //         palette.txt
+        //        let paletteString = ""
+        //        let newPalette = paletteString.data(using: .utf16)!
+        
+        // create new project
+        let userRef = "emails/\(user.email)/\(user.uid)"
+        let newProjectRef = db.collection(userRef).addDocument(data: ["name " : newName])
+        
+        // new color shceme
+        let collectionRef = "\(userRef)/\(newProjectRef.documentID)/ColorSchemes"
+        let colorScheme = db.collection(collectionRef).addDocument(data: ["sketches" : [String]()])
+                
+                // send new info to the main view
+                if let mainView = navigationController?.viewControllers[0] as? ViewController {
+                    
+                    // save to ID
+                    mainView.projectID = newProjectRef.documentID
+                    // save to name
+                    mainView.projectName = newName
+                    // save to user
+                    mainView.user = user
+                    // save sketch with new color scheme
+                    mainView.colorScheme = colorScheme.documentID
+                    mainView.saveSketch(data: newSketch)
+                    // save image
+                    mainView.saveImage(data: newImage!)
+                    
+                    // save palette
+                    //mainView.savePalette(data: newPalette)
+                    
+                    //loadSketch(project: newName, for: mainView)
+                    
+                }
+                
+                // pop view
+                navigationController?.popViewController(animated: true)
+    }
+    @IBAction func cancelNewProjectBtn(_ sender: UIButton) {
+        animation.animateOut(desiredView: newProjectView)
+    }
+    
     
     // MARK: - LOGIN / SIGN UP
     @IBAction func showLoginSignup(_ sender: UIButton) {
@@ -180,46 +272,97 @@ class ProjectsViewController: UIViewController {
     }
     
     func signup(){
-        if !(emailField.text!.isEmpty) || !(passwordField.text!.isEmpty) {
-            Auth.auth().createUser(withEmail: "\(emailField.text!)", password: "\(passwordField.text!)") { result, error in
-                
-                // check error
-                guard error == nil else {
-                    print("ERROR SIGNUP: \(String(describing: error))")
-                    print("EMAIL: \(self.emailField.text!) PASSWORD: \(self.passwordField.text!)")
-                    self.errorLabel.text = "error signing up"
-                    self.errorLabel.textColor = .red
-                    return
-                }
-                
-                // success
-                print("Succeful Signed up as: \(String(describing: result?.user.uid))")
-                self.animation.animateOut(desiredView: self.loginSignupView)
-                
+        
+        // make sure text fields are not blank
+        guard let checkEmail = emailField.text, let checkPassword = passwordField.text else {
+            errorLabel.text = "Do not leave any field blank"
+            errorLabel.textColor = .red
+            return
+            
+        }
+        email = checkEmail
+        password = checkPassword
+        
+        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+            
+            // check error
+            guard error == nil else {
+                print("ERROR SIGNUP: \(String(describing: error))")
+                print("EMAIL: \(self.email) PASSWORD: \(self.password)")
+                self.errorLabel.text = "error signing up"
+                self.errorLabel.textColor = .red
+                return
             }
-        } else {
+            
+            // success
+            print("Succeful Signed up as: \(String(describing: result?.user.uid))")
+            
+            //creates new users firestore document
+            self.db.collection("emails").document(self.email).setData(["sharedProjects" : [String]()])
+            
+            self.animation.animateOut(desiredView: self.loginSignupView)
+            self.newUser = true
+            self.login()
             
         }
     }
     
     func login(){
-        Auth.auth().signIn(withEmail: "myEmail@gmail.com", password: "password") { [self] result, error in
+        
+        // make sure text fields are not blank
+        if newUser == false {
+            guard let checkEmail = emailField.text, let checkPassword = passwordField.text else {
+                errorLabel.text = "Do not leave any field blank"
+                errorLabel.textColor = .red
+                return
+            }
+            email = checkEmail
+            password = checkPassword
+        }
+        
+        // try to login
+        Auth.auth().signIn(withEmail: email, password: password) { [self] result, error in
             
             // check error
-            guard error == nil else {
+            guard let result = result, error == nil else {
                 print("ERROR LOGIN: \(String(describing: error))")
                 self.errorLabel.text = "error logging in"
                 self.errorLabel.textColor = .red
                 return
             }
             
-            // success
-            print("Successfully Logged in as: \(String(describing: result?.user.uid))")
+            // user
+            self.user.uid = result.user.uid
+            self.user.email = result.user.email!
             
+            // success
+            print("Successfully Logged in as: \(String(describing: user.uid))")
             // get uid
-            self.uid = (result?.user.uid)!
+            //self.uid = user.uid
             
             // get projects info
+            db.collection("emails/\(user.email)/\(user.uid)").getDocuments { snapshot, error in
+                guard let snapshot = snapshot, error == nil else {
+                    print("Document not found")
+                    return
+                }
+                // save docIds
+                projects = snapshot.documents.map{$0.documentID}
+                
+                // load info on app
+                snapshot.documents.forEach { document in
+                    do {
+                        print("DOCUMENTS: \(document.documentID)")
+                        let project = try Projects(snapshot: document.data())
+                        
+                        loadImage(file: project.image)
+                        
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                }
+                
+            }
             
             
             self.animation.animateOut(desiredView: self.loginSignupView)
@@ -327,16 +470,16 @@ extension ProjectsViewController: UICollectionViewDelegate {
 extension ProjectsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return numOfProjects
+        return projects.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = projectsCollection.dequeueReusableCell(withReuseIdentifier: ProjectsCollectionViewCell.identifier, for: indexPath) as! ProjectsCollectionViewCell
         
-        print("PROJECTS: \(projects.count) SNAPSHOTS: \(snapshots.count)")
+        print("PROJECTS: \(projects.count) SNAPSHOTS: \(images.count)")
         let i = (indexPath[0] * 4) + indexPath[1]
         print(i)
-        cell.configure(with: snapshots[i]!)
+        cell.configure(with: images[i]!)
         
         return cell
     }

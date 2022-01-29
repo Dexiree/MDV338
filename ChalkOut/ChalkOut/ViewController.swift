@@ -46,6 +46,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     var ink = PKInkingTool(.pencil)
     
     var projectName = "Untiled"
+    var projectID = "1234"
+    var colorScheme = "1234"
+    var sketch = 0
+    var user = User(email: "test@gmail.com", uid: "1234")
 
     // MARK: Load View
     override func viewDidLoad() {
@@ -66,38 +70,80 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         Edit.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.75, height: self.view.bounds.height * 0.3)
         Edit.layer.cornerRadius = 20
         
-        LoadData()
+        //LoadData()
         
     }
     func LoadData(){
         
-        let user = "SM6dJglgBGR6mrWlr8gWJaEjSiq2"
-        let collection = "SharedProjects/bn7g6xiA9asKTV5nBXMQ/ColorSchemes"
-        let document = "WlZ3bZSnZLpwpeb19LWD"
-        let docRef = db.collection("users/\(user)/\(collection)").document("\(document)")
+        let docRef = db.collection("emails/\(user.email)/\(user.uid)/\(projectID)/ColorSchemes").document("\(colorScheme)")
         
         // getting specific document from user
-        docRef.getDocument { snapshot, error in
+        docRef.addSnapshotListener { snapshot, error in
             guard let snapshot = snapshot, error == nil else {return print(error.debugDescription)}
             
             do {
-                
-                let colorScheme = try ColorSchemes(snapshot: snapshot.data()!)
+                // get data
+                guard let data = snapshot.data() else {
+                    print("NO DATA")
+                    return
+                }
+                let colorScheme = try ColorSchemes(snapshot: data)
                 
                 // get palette
-                for hex in colorScheme.palette {
-                    self.new(color: UIColor(hex: hex))
-                }
+                let colors = colorScheme.palette.map { UIColor(hex: $0)}
+                self.loadPalette(colors: colors)
                 
                 //get sketch
                 let sketch = colorScheme.sketches[0]
                 self.loadSketch(sketch: sketch)
+                //let sketch = colorScheme.drawing
+                //self.loadDrawing(sketch: sketch)
                 
             } catch {
                 print(error.localizedDescription)
             }
             
         }
+        
+    }
+    
+    func loadPalette(colors: [UIColor]) {
+        
+        colors.forEach { color in
+            self.new(color: color)
+        }
+        
+        // when updating colors it removes the old colors
+        if self.pallete.subviews.count > colors.count {
+            repeat {
+                self.pallete.subviews.first?.removeFromSuperview()
+            } while self.pallete.subviews.count > colors.count
+        }
+    }
+    
+    func loadDrawing(sketch: String) {
+        
+        guard let Stringdata = Data(base64Encoded: sketch, options: .ignoreUnknownCharacters) else {
+            print("NO DATA")
+            return
+        }
+        guard let data = Data(base64Encoded: Stringdata, options: .ignoreUnknownCharacters) else {
+            print("NODATA")
+            return
+        }
+    
+        print("DATA: \(data)")
+        
+        let newdrawing = PKDrawing().dataRepresentation()
+        print("PKData: \(newdrawing)")
+        
+        // convert data to PKDrawing
+        guard let drawing = try? PKDrawing(data: data) else {
+            print("NO DRAWING")
+            return}
+        print("YES DRAWING")
+        // load sketch on canvas
+        canvasView.drawing = drawing
     }
     
     func loadSketch(sketch: String) {
@@ -115,6 +161,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
             guard let sketch = try? PKDrawing(data: data) else {
                 print("NO DRAWING")
                 return}
+            
             // load sketch on canvas
             self.canvasView.drawing = sketch
             
@@ -133,6 +180,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         // display project name
         navigationItem.title = projectName
+        LoadData()
     }
     
     // Hides home button
@@ -232,7 +280,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // save hex as data
         return paletteString.data(using: .utf16)!
     }
-    
     func savePalette(data: Data){
         storage.child("Projects/\(projectName)/palette.txt").putData(data, metadata: nil) { _, error in
             guard error == nil else {
@@ -284,8 +331,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
             }
         }
     }
-    func Wait(duration: Double, execute: ((() -> Void))?)
-    {
+    func Wait(duration: Double, execute: ((() -> Void))?) {
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             if let done = execute{done()}
         }
@@ -301,12 +347,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     func toolPickerSelectedToolDidChange(_ toolPicker: PKToolPicker) {
         
         if let inkling = toolPicker.selectedTool as? PKInkingTool {
-            //print("INK: \(inkling)")
             ink = inkling
-        } else if let eraser = toolPicker.selectedTool as? PKEraserTool {
-            //print("ERASER: \(eraser)")
-        } else if let lasso = toolPicker.selectedTool as? PKLassoTool {
-            //print("LASSO: \(lasso)")
         }
     }
     
@@ -364,10 +405,10 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     // saving functions
     func saveSketch(data: Data){
+        let collectionRef = "emails/\(user.email)/\(user.uid)/\(projectID)/ColorSchemes"
+        let sketchRef = "\(user.uid)/\(projectID)/ColorSchemes/\(colorScheme)/sketches/\(sketch).drawing"
         
-        let sketchRef = "Projects/\(projectName)/sketch.drawing"
-        
-        // saves sketch as data to database
+        // saves sketch as data to storage
         storage.child(sketchRef).putData(data, metadata: nil) { _, error in
             guard error == nil else {
                 print("There was an issue")
@@ -381,18 +422,60 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                 }
                 let urlString = url.absoluteString
                 print("Download: \(urlString)")
+                
+                // send sketch link to database
+                self.db.collection(collectionRef).document(self.colorScheme).getDocument { snapshot, error in
+                    guard let snapshot = snapshot, error == nil else {return}
+                    guard let data = snapshot.data() else {return}
+                    
+                    // either update or add sketch
+                    do {
+                        let colorScheme = try ColorSchemes(snapshot: data)
+                        
+                        // get all the sketches in the sketches array from database
+                        var sketches = colorScheme.sketches
+                        
+                        if sketches.count > 0 {
+                            // update
+                            sketches[self.sketch] = urlString
+                        } else {
+                            // add new sketch to database
+                            self.db.collection(collectionRef).document(self.colorScheme).updateData(["sketches" : FieldValue.arrayUnion([urlString])])
+                        }
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                    
+                }
             }
         }
         
     }
+    
     func saveImage(data: Data) {
-        storage.child("Projects/\(projectName)/snapshot.png").putData(data, metadata: nil) { _, error in
+        let collectionRef = "emails/\(user.email)/\(user.uid)"
+        let imageRef = "\(user.uid)/\(projectID)/image.png"
+        
+        // save image to storage
+        storage.child(imageRef).putData(data, metadata: nil) { _, error in
             guard error == nil else {
                 print("There was an issue")
                 return
             }
+            
+            // get url from image
+            self.storage.child(imageRef).downloadURL { url, error in
+                guard let url = url, error == nil else {
+                    return
+                }
+                let urlString = url.absoluteString
+            
+                // upload url to database
+                self.db.collection(collectionRef).document(self.projectID).updateData(["image" : urlString])
         }
     }
 
+}
+    
 }
 

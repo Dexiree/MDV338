@@ -8,6 +8,17 @@
 import UIKit
 import FirebaseFirestore
 
+// TODO: Check if I can decode this
+struct User {
+    var email: String
+    var uid: String
+    
+    init(email: String = "", uid: String = "") {
+        self.email = email
+        self.uid = uid
+    }
+}
+
 struct Projects: Codable {
     let name: String
     let image: String
@@ -25,5 +36,13 @@ struct ColorSchemes: Codable {
     
     init(snapshot: [String : Any]) throws {
         self = try JSONDecoder().decode(ColorSchemes.self, from: JSONSerialization.data(withJSONObject: snapshot))
+    }
+}
+
+struct SharedProjects: Codable {
+    let sharedProjects: [String]
+    
+    init(snapshot: [String: Any]) throws {
+        self = try JSONDecoder().decode(SharedProjects.self, from: JSONSerialization.data(withJSONObject: snapshot))
     }
 }
