@@ -21,40 +21,57 @@ extension UIColor{
         var g: CGFloat = 0.0
         var b: CGFloat = 0.0
         var a: CGFloat = 0.0
+        let multiplier = CGFloat(255.999999)
+        
         self.getRed(&r, green: &g, blue: &b, alpha: &a)
         
-        // convert to Ints
-        let red = Int(r*255)
-        let green = Int(g*255)
-        let blue = Int(b*255)
+        return String(
+                        format: "%02lX%02lX%02lX",
+                        Int(r * multiplier),
+                        Int(g * multiplier),
+                        Int(b * multiplier)
+                    )
         
-        // multiply by 16 get the Ints
-        let r1 = Int(red/16)
-        let g1 = Int(green/16)
-        let b1 = Int(blue/16)
-        // get the remainder
-        let r2 = red%16
-        let g2 = green%16
-        let b2 = blue%16
-        
-        // take first half and second halves and convert to hexiadecimal
-        return "\(hexChart[r1])\(hexChart[r2])\(hexChart[g1])\(hexChart[g2])\(hexChart[b1])\(hexChart[b2])"
+//        // convert to Ints
+//        let red = Int(r*255)
+//        let green = Int(g*255)
+//        let blue = Int(b*255)
+//
+//        // multiply by 16 get the Ints
+//        let r1 = Int(red/16)
+//        let g1 = Int(green/16)
+//        let b1 = Int(blue/16)
+//        // get the remainder
+//        let r2 = red%16
+//        let g2 = green%16
+//        let b2 = blue%16
+//
+//        // take first half and second halves and convert to hexiadecimal
+//        print("NEW HEX: \(r),\(g),\(b)")
+//        return "\(hexChart[r1])\(hexChart[r2])\(hexChart[g1])\(hexChart[g2])\(hexChart[b1])\(hexChart[b2])"
     }
     
     convenience init(hex: String) {
         self.init()
+        print("HEXVALUE: \(hex)")
         
-        let r1 = hexChart.firstIndex(of: hex[0])!
-        let r2 = hexChart.firstIndex(of: hex[1])!
-        let red = ((CGFloat(r1) * 16) + CGFloat(r2)) / 255.0
+        var red = CGFloat()
+        if let r1 = hexChart.firstIndex(of: hex[0]), let r2 = hexChart.firstIndex(of: hex[1]){
+            red = ((CGFloat(r1) * 16) + CGFloat(r2)) / 255.0
+            print("RED: \(r1),\(r2)")
+        }
         
-        let g1 = hexChart.firstIndex(of: hex[2])!
-        let g2 = hexChart.firstIndex(of: hex[3])!
-        let green = ((CGFloat(g1) * 16) + CGFloat(g2)) / 255.0
+        var green = CGFloat()
+        if let g1 = hexChart.firstIndex(of: hex[2]), let g2 = hexChart.firstIndex(of: hex[3]){
+            green = ((CGFloat(g1) * 16) + CGFloat(g2)) / 255.0
+            print("GREEN: \(g1),\(g2)")
+        }
         
-        let b1 = hexChart.firstIndex(of: hex[4])!
-        let b2 = hexChart.firstIndex(of: hex[5])!
-        let blue = ((CGFloat(b1) * 16) + CGFloat(b2)) / 255.0
+        var blue = CGFloat()
+        if let b1 = hexChart.firstIndex(of: hex[4]), let b2 = hexChart.firstIndex(of: hex[5]) {
+            blue = ((CGFloat(b1) * 16) + CGFloat(b2)) / 255.0
+            print("BLUE: \(b1),\(b2)")
+        }
         
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }

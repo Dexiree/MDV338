@@ -30,9 +30,9 @@ class ProjectsViewController: UIViewController, UITextFieldDelegate {
     private let storage = Storage.storage().reference()
     private let db = Firestore.firestore()
     
-    var numOfProjects = 0
     var images = [UIImage(systemName: "scribble")]
-    var projects = [String]()
+    var projIDs = [String]()
+    var projects = [Projects]()
     
     let animation = Animations()
     var willLogin = true
@@ -78,20 +78,6 @@ class ProjectsViewController: UIViewController, UITextFieldDelegate {
         
         // load data from database
         loadProjects()
-//        storage.child("Projects").listAll { list, error in
-//            guard error == nil else {
-//                print("ERROR")
-//                return
-//            }
-//            // getting the number of projects in the database
-//            self.numOfProjects = list.prefixes.capacity
-//
-//            // getting the name of each project in the database
-//            for prefixes in list.prefixes {
-//                self.projects.append(prefixes.name)
-//                self.loadImage(file: prefixes.name)
-//            }
-//        }
         
     }
     
@@ -107,19 +93,22 @@ class ProjectsViewController: UIViewController, UITextFieldDelegate {
                 return
             }
             // save docIds
-            self.projects = snapshot.documents.map{$0.documentID}
+            self.projIDs = snapshot.documents.map{$0.documentID}
             
             // load info on app
+            self.images.removeAll()
             snapshot.documents.forEach { document in
                 do {
                     let project = try Projects(snapshot: document.data())
-                    
-                    guard let image = project.image else {return}
-                    self.loadImage(file: image)
+                    self.projects.append(project)
                     
                 } catch {
                     print(error.localizedDescription)
                 }
+            }
+            self.projects.forEach { project in
+                guard let image = project.image else {return}
+                self.loadImage(file: image)
             }
             
         }
@@ -142,29 +131,6 @@ class ProjectsViewController: UIViewController, UITextFieldDelegate {
         } catch {
             print(error.localizedDescription)
         }
-        
-        
-        //snapshots.removeAll()
-        
-        // getting snapshot from database
-//        storage.child("Projects/\(file)/snapshot.png").getData(maxSize: 10 * 1024 * 1024) { data, error in
-//
-//            // if error
-//            guard let data = data, error == nil else {
-//                print("There was an issue")
-//                return
-//            }
-//
-//            // get data
-//            if let snapshot = UIImage(data: data){
-//                self.snapshots.append(snapshot)
-//
-//            }
-//            // reload collectionView
-//            if self.snapshots.count == self.projects.count{
-//                self.projectsCollection.reloadData()
-//            }
-//        }
         
     }
     
@@ -205,26 +171,45 @@ class ProjectsViewController: UIViewController, UITextFieldDelegate {
         //colorScheme.setData(["palette" : [String]()])
                 
                 // send new info to the main view
-                if let mainView = navigationController?.viewControllers[0] as? ViewController {
-                    
-                    // save to ID
-                    mainView.projectID = newProjectRef.documentID
-                    // save to name
-                    mainView.projectName = newName
-                    // save to user
-                    mainView.user = user
-                    // save sketch with new color scheme
-                    mainView.colorScheme = colorScheme.documentID
-                    mainView.saveSketch(data: newSketch)
-                    // save image
-                    mainView.saveImage(data: newImage!)
-                    
-                    // save palette
-                    //mainView.savePalette(data: newPalette)
-                    
-                    //loadSketch(project: newName, for: mainView)
-                    
-                }
+        // save to ID
+        mainView.projectID = newProjectRef.documentID
+        // save to name
+        mainView.projectName = newName
+        // save to user
+        mainView.user = user
+        // save sketch with new color scheme
+        mainView.colorScheme = colorScheme.documentID
+        mainView.saveSketch(data: newSketch)
+        // save image
+        mainView.saveImage(data: newImage!)
+        
+        // save palette
+        //mainView.savePalette(data: newPalette)
+        
+        //loadSketch(project: newName, for: mainView)
+        
+        
+        
+//                if let mainView = navigationController?.viewControllers[0] as? ViewController {
+//
+//                    // save to ID
+//                    mainView.projectID = newProjectRef.documentID
+//                    // save to name
+//                    mainView.projectName = newName
+//                    // save to user
+//                    mainView.user = user
+//                    // save sketch with new color scheme
+//                    mainView.colorScheme = colorScheme.documentID
+//                    mainView.saveSketch(data: newSketch)
+//                    // save image
+//                    mainView.saveImage(data: newImage!)
+//
+//                    // save palette
+//                    //mainView.savePalette(data: newPalette)
+//
+//                    //loadSketch(project: newName, for: mainView)
+//
+//                }
                 
                 // pop view
                 navigationController?.popViewController(animated: true)
@@ -344,13 +329,16 @@ class ProjectsViewController: UIViewController, UITextFieldDelegate {
             // user
             self.user.uid = result.user.uid
             self.user.email = result.user.email!
+            mainView.user.uid = result.user.uid
+            mainView.user.email = result.user.email!
+            //mainView.user.uid = user.uid
+            //mainView.user.email = user.email
             
             // success
             print("Successfully Logged in as: \(String(describing: user.uid))")
             
             // get projects info
             loadProjects()
-            
             
             self.animation.animateOut(desiredView: self.loginSignupView)
         }
@@ -369,91 +357,29 @@ extension ProjectsViewController: UICollectionViewDelegate {
         projectsCollection.deselectItem(at: indexPath, animated: true)
         
         // get project based on the selected cell
-        let selected = (indexPath[0]*4) + indexPath[1]
-        let chosenProject = projects[selected]
+        let selected = (indexPath[0] * 4) + indexPath[1]
+        let chosenProject = projIDs[selected]
+        var colorSchemes = [DocumentReference]()
         
-        // send info to the main view
-        if let mainView = navigationController?.viewControllers[0] as? ViewController {
+        db.collection("emails/\(user.email)/\(user.uid)/\(chosenProject)/ColorSchemes").getDocuments { snapshot, error in
+            guard let snapshot = snapshot, error == nil else {return}
+            
+            colorSchemes = snapshot.documents.map{$0.reference}
+            //guard let name = self.projects[0].name else {return}
+            //let colorScheme = snapshot.documents[0].documentID
+            
+            // send info to the main view
             
             // send project Name to root ViewController
             mainView.projectID = chosenProject
+            mainView.colorSchemes = colorSchemes
             mainView.LoadData()
-            // load data as drawing
-            //loadSketch(project: chosenProject, for: mainView)
-            
-            // load data as palette
-            //loadPalette(project: chosenProject, for: mainView)
             
         }
         
         // pop view
         navigationController?.popViewController(animated: true)
-        
-    }
-    
-    func loadSketch(project: String, for view: ViewController) {
-        
-        //db.collection("emails/\(user.email)/\(user.uid)").document(project)
-        
-        
-        storage.child("Projects/\(project)/sketch.drawing").getData(maxSize: 10 * 1024 * 1024) { data, error in
 
-            // if error
-            guard let data = data, error == nil else {
-                print("There was an issue")
-                return
-            }
-
-            // get sketch data
-            if let loadDrawing = try? PKDrawing(data: data){
-                view.canvasView.drawing = loadDrawing
-            }
-        }
-    }
-    
-    func loadPalette(project: String, for view: ViewController) {
-        
-        // removes all colors from pallete if any
-        for color in view.pallete.subviews {
-            color.removeFromSuperview()
-        }
-        storage.child("Projects/\(project)/palette.txt").getData(maxSize: 10 * 1024 * 1024) { data, error in
-
-            // if error
-            guard let data = data, error == nil else {
-                print("ERROR: \(error!)")
-                return
-            }
-
-            // get color data
-            if let paletteString = String(data: data, encoding: .utf16) {
-                
-                if paletteString != "" {
-                    
-                    // each hex code has 7 char (EX. #FFFFFF)
-                    let numOfColors = paletteString.count / 7
-                    
-                    var start = 1
-                    var endBefore = 7
-                    var colors = [UIColor]()
-                    
-                    // seperating each color into an array
-                    for _ in 1...numOfColors {
-                        let hexColor = paletteString[start ..< endBefore]
-                        colors.append(UIColor(hex: hexColor))
-                        
-                        start += 7
-                        endBefore += 7
-                    }
-                    
-                    // add colors to palette
-                    colors.forEach { color in
-                        view.new(color: color)
-                    }
-                }
-                
-            }
-        }
     }
 }
 
@@ -461,15 +387,17 @@ extension ProjectsViewController: UICollectionViewDelegate {
 extension ProjectsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return projects.count
+        return projIDs.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = projectsCollection.dequeueReusableCell(withReuseIdentifier: ProjectsCollectionViewCell.identifier, for: indexPath) as! ProjectsCollectionViewCell
         
-        print("PROJECTS: \(projects.count) IMAGES: \(images.count)")
+        print("PROJECTS: \(projIDs.count) IMAGES: \(images.count)")
+        
         let i = (indexPath[0] * 4) + indexPath[1]
         print(i)
+        
         cell.configure(with: images[i]!)
         
         return cell

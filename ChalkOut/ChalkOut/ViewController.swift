@@ -10,6 +10,8 @@ import PencilKit
 import FirebaseStorage
 import FirebaseFirestore
 
+var mainView = ViewController()
+
 class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserver, UIColorPickerViewControllerDelegate {
     
     // OUTLETS
@@ -19,6 +21,12 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     
     @IBOutlet var Popup: UIView!
     @IBOutlet var Edit: UIView!
+    
+    @IBOutlet weak var lockedBtn: UIButton!
+    @IBOutlet weak var refColorSwitch: UISwitch!
+    @IBOutlet weak var refColorLabel: UILabel!
+    
+    
     @IBOutlet var Blur: UIVisualEffectView!
     
     @IBOutlet weak var Hex: UILabel!
@@ -27,11 +35,13 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     // Variables
     private let storage = Storage.storage().reference()
     private let db = Firestore.firestore()
-    //var drawing = Data()
     let animation = Animations()
     
-    var scheme: colorScheme = .analogous
+    var scheme: colorScheme = .complementary
     var temp: temperature = .auto
+    var locked = [Bool]()
+    var referenceColor = [Bool]()
+    //var colorTheoryChoice = 0
     
     var selected = 0
     var holding = false
@@ -46,10 +56,11 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
     var ink = PKInkingTool(.pencil)
     
     var projectName = "Untiled"
-    var projectID = "1234"
-    var colorScheme = "1234"
+    var projectID = "YbCCa5kf6U6kQexcIQna"
+    var colorSchemes = [DocumentReference]()
+    var colorScheme = "LeNbWMAA1JeiNmkkakAp"
     var sketch = 0
-    var user = User(email: "test@gmail.com", uid: "1234")
+    var user = User(email: "design", uid: "JjyOH9HwS2dlMt34lJW3K19Avvm2")
 
     // MARK: Load View
     override func viewDidLoad() {
@@ -64,18 +75,22 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         // Popup
         Blur.bounds = self.view.bounds
-        Popup.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.9, height: self.view.bounds.height * 0.4)
+        Popup.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.9, height: self.view.bounds.height * 0.1)
         Popup.layer.cornerRadius = 20
         // Edit
         Edit.bounds = CGRect(x: 0, y: 0, width: self.view.bounds.width * 0.75, height: self.view.bounds.height * 0.3)
         Edit.layer.cornerRadius = 20
         
-        //LoadData()
+        mainView = self
         
     }
     func LoadData(){
         
-        let docRef = db.collection("emails/\(user.email)/\(user.uid)/\(projectID)/ColorSchemes").document("\(colorScheme)")
+        var docRef = db.collection("emails/\(user.email)/\(user.uid)/\(projectID)/ColorSchemes").document("\(colorScheme)")
+
+        if colorSchemes.count > 0 {
+            docRef = colorSchemes[0]
+        }
         
         // getting specific document from user
         docRef.addSnapshotListener { snapshot, error in
@@ -90,16 +105,24 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                 let colorScheme = try ColorSchemes(snapshot: data)
                 
                 // get palette
-                guard let palette = colorScheme.palette else {return}
-                let colors = palette.map { UIColor(hex: $0)}
-                self.loadPalette(colors: colors)
+                if let palette = colorScheme.palette {
+                    let colors = palette.map { UIColor(hex: $0)}
+                    self.loadPalette(colors: colors)
+                }
                 
                 //get sketch
                 guard let sketches = colorScheme.sketches else {return}
+                
+                if sketches.count == 0 {
+                    //         create new sketch.drawing
+                            let newSketch = PKCanvasView().drawing.dataRepresentation()
+                    //         create new image.png
+                            let newImage = UIImage(systemName: "scribble")?.pngData()
+                    self.saveSketch(data: newSketch)
+                    self.saveImage(data: newImage!)
+                }
                 let sketch = sketches[0]
                 self.loadSketch(sketch: sketch)
-                //let sketch = colorScheme.drawing
-                //self.loadDrawing(sketch: sketch)
                 
             } catch {
                 print(error.localizedDescription)
@@ -121,31 +144,6 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                 self.pallete.subviews.first?.removeFromSuperview()
             } while self.pallete.subviews.count > colors.count
         }
-    }
-    
-    func loadDrawing(sketch: String) {
-        
-        guard let Stringdata = Data(base64Encoded: sketch, options: .ignoreUnknownCharacters) else {
-            print("NO DATA")
-            return
-        }
-        guard let data = Data(base64Encoded: Stringdata, options: .ignoreUnknownCharacters) else {
-            print("NODATA")
-            return
-        }
-    
-        print("DATA: \(data)")
-        
-        let newdrawing = PKDrawing().dataRepresentation()
-        print("PKData: \(newdrawing)")
-        
-        // convert data to PKDrawing
-        guard let drawing = try? PKDrawing(data: data) else {
-            print("NO DRAWING")
-            return}
-        print("YES DRAWING")
-        // load sketch on canvas
-        canvasView.drawing = drawing
     }
     
     func loadSketch(sketch: String) {
@@ -204,7 +202,7 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         //save color palette to Firebase
         let paletteData = getPaletteColors()
-        savePalette(data: paletteData)
+        savePalette(palette: paletteData)
     }
     
     // buttons
@@ -213,29 +211,72 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         // show color picker
         present(colorPicker, animated: true)
         
-        // add selected color to pallete
         new(color: selectedColor)
     }
     @IBAction func generateColors(_ sender: UIButton) {
-        
-        // TODO: Change to getting hsb from locked colors
+
         // get first colors info
-        let first = pallete.subviews.first?.backgroundColor
+        var color: UIColor?
+        for i in 0...referenceColor.count - 1 {
+            if referenceColor[i] == true {
+                color = pallete.subviews[i].backgroundColor
+            }
+        }
+        guard let refColor = color else {
+            QuickAlert(title: "Warning", message: "Please select a Reference Color", buttonMessage: "OK")
+            return
+        }
         var hue: CGFloat = 0.0
         var saturation: CGFloat = 0.0
         var brightness: CGFloat = 0.0
         var alpha: CGFloat = 0.0
-        first?.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        refColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
         
         // Generate new colors based on color theme
         switch scheme {
         case .analogous:
             if pallete.subviews.count > 1 {
                 for i in 0...pallete.subviews.count - 1 {
-                    // all the colors except the first
-                    if i > 0 {
+                    // all the colors except the locked ones
+                    if locked[i] != true {
                         let newHue = CGFloat.random(in: hue - 0.17...hue + 0.17)
                         pallete.subviews[i].backgroundColor = UIColor(hue: newHue, saturation: saturation, brightness: brightness, alpha: alpha)
+                    }
+                }
+            }
+        case .monochromatic:
+            if pallete.subviews.count > 1 {
+                for i in 0...pallete.subviews.count - 1 {
+                    // all the colors except the locked ones
+                    if locked[i] != true {
+                        let newBright = CGFloat.random(in: brightness - 0.17...brightness + 0.17)
+                        pallete.subviews[i].backgroundColor = UIColor(hue: hue, saturation: saturation, brightness: newBright, alpha: alpha)
+                    }
+                }
+            }
+        case .complementary:
+            if pallete.subviews.count > 1 {
+                for i in 0...pallete.subviews.count - 1 {
+                    // all the colors except the locked ones
+                    if locked[i] != true {
+                        
+                        // get complimentary color
+                        var newHex = ""
+                        let hex = refColor.getHex()
+                        hex.forEach { char in
+                            newHex.append(complimentary(value: char))
+                        }
+                        var complimentaryColor = UIColor(hex: newHex)
+                        
+                         //random brightness
+                        var h,s,b: CGFloat
+                        h = 0; s = 0; b = 0
+                        complimentaryColor.getHue(&h, saturation: &s, brightness: &b, alpha: &alpha)
+                        let newB = CGFloat.random(in: b - 0.17...b + 0.17)
+                        complimentaryColor = UIColor(hue: h, saturation: s, brightness: newB, alpha: 1.0)
+                        
+                        // set color
+                        pallete.subviews[i].backgroundColor = complimentaryColor
                     }
                 }
             }
@@ -250,7 +291,61 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
         // save palette
         let paletteData = getPaletteColors()
-        savePalette(data: paletteData)
+        savePalette(palette: paletteData)
+    }
+
+    func QuickAlert(title t: String, message m: String, buttonMessage b: String)
+    {
+        // creates the alert
+        let alert = UIAlertController(title: t, message: m, preferredStyle: UIAlertController.Style.alert)
+        
+        // creates the alert button
+        let okButton = UIAlertAction(title: b, style: UIAlertAction.Style.default, handler: nil)
+        alert.addAction(okButton)
+        
+        // presents the alert
+        present(alert, animated: true, completion: nil)
+    }
+
+    func complimentary(value: Character) -> Character{
+        // 0f,1e,2d,3c,4b,5a,69,78
+        print("VALUE: \(value)")
+        var newValue: Character = "0"
+        
+        switch value {
+        case "0":
+            newValue = "F"
+        case "1":
+            newValue = "E"
+        case "2":
+            newValue = "D"
+        case "3":
+            newValue = "C"
+        case "4":
+            newValue = "B"
+        case "5":
+            newValue = "A"
+        case "6":
+            newValue = "9"
+        case "7":
+            newValue = "8"
+        case "A":
+            newValue = "5"
+        case "B":
+            newValue = "4"
+        case "C":
+            newValue = "3"
+        case "D":
+            newValue = "2"
+        case "E":
+            newValue = "1"
+        case "F":
+            newValue = "0"
+        default:
+            newValue = "0"
+        }
+        
+        return newValue
     }
     
     // functions
@@ -265,6 +360,12 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         newColor.addTarget(self, action: #selector(doubleTappedColor), for: .touchDownRepeat)
         newColor.addTarget(self, action: #selector(holdColor), for: .touchDown)
         
+        // add lock to color
+        locked.append(false)
+        
+        // add refColor option to color
+        referenceColor.append(false)
+        
         // add new color to the palette
         pallete.addArrangedSubview(newColor)
         
@@ -273,22 +374,21 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         
     }
     
-    func getPaletteColors() -> Data{
-        var paletteString = ""
-        // convert all the colors to hex
+    func getPaletteColors() -> [String] {
+        
+        var paletteStrings = [String]()
+        
         for color in pallete.subviews {
-            paletteString.append("#\((color.backgroundColor?.getHex())!)")
+            paletteStrings.append("\((color.backgroundColor?.getHex())!)")
         }
-        // save hex as data
-        return paletteString.data(using: .utf16)!
+        
+        return paletteStrings
     }
-    func savePalette(data: Data){
-        storage.child("Projects/\(projectName)/palette.txt").putData(data, metadata: nil) { _, error in
-            guard error == nil else {
-                print("There was an issue")
-                return
-            }
-        }
+    func savePalette(palette: [String]){
+        
+        let collectionRef = "emails/\(user.email)/\(user.uid)/\(projectID)/ColorSchemes"
+        db.collection(collectionRef).document(colorScheme).setData(["palette" : palette])
+        
     }
     
     // MARK: - Palette Actions
@@ -329,6 +429,28 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                 self.colorEdit.backgroundColor = sender.backgroundColor
                 // get seleced
                 self.selected = self.pallete.subviews.firstIndex(of: sender)!
+                // set lock
+                if self.locked[self.selected] == true {
+                    self.lockedBtn.setImage(UIImage(systemName: "lock"), for: .normal)
+                    self.lockedBtn.setTitle(" Locked", for: .normal)
+                } else {
+                    self.lockedBtn.setImage(UIImage(systemName: "lock.open"), for: .normal)
+                    self.lockedBtn.setTitle(" Unlocked", for: .normal)
+                }
+                // set reference color
+                if self.locked[self.selected] == true {
+                    self.refColorSwitch.isEnabled = true
+                    self.refColorLabel.isEnabled = true
+                } else {
+                    self.refColorSwitch.isEnabled = false
+                    self.refColorLabel.isEnabled = false
+                }
+                if self.referenceColor[self.selected] == true {
+                    self.refColorSwitch.isOn = true
+                } else {
+                    self.refColorSwitch.isOn = false
+                }
+                
                 
             }
         }
@@ -366,19 +488,61 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
         animation.animateOut(desiredView: Edit)
     }
     @IBAction func LockEdit(_ sender: UIButton) {
-        
+        if locked[selected] == true {
+            locked[selected] = false
+            lockedBtn.setImage(UIImage(systemName: "lock.open"), for: .normal)
+            lockedBtn.setTitle(" Unlocked", for: .normal)
+            refColorSwitch.isEnabled = false
+            refColorLabel.isEnabled = false
+            refColorSwitch.isOn = false
+            
+        } else {
+            locked[selected] = true
+            lockedBtn.setImage(UIImage(systemName: "lock"), for: .normal)
+            lockedBtn.setTitle(" Locked", for: .normal)
+            refColorSwitch.isEnabled = true
+            refColorLabel.isEnabled = true
+        }
     }
     @IBAction func DuplicateEdit(_ sender: UIButton) {
         new(color: pallete.subviews[selected].backgroundColor!)
         let paletteData = getPaletteColors()
-        savePalette(data: paletteData)
+        savePalette(palette: paletteData)
     }
     @IBAction func DeleteEdit(_ sender: UIButton) {
         pallete.subviews[selected].removeFromSuperview()
         Edit.removeFromSuperview()
+        locked.remove(at: selected)
         let paletteData = getPaletteColors()
-        savePalette(data: paletteData)
+        savePalette(palette: paletteData)
     }
+    @IBAction func toggleReference(_ sender: UISwitch) {
+        for i in 0...referenceColor.count - 1 {
+            if i != selected {
+                referenceColor[i] = false
+            } else {
+                referenceColor[i] = true
+            }
+        }
+    }
+    
+    @IBAction func ColorTheorySegmented(_ sender: UISegmentedControl) {
+        let index = sender.selectedSegmentIndex
+        
+        switch index {
+        case 0:
+            scheme = .analogous
+        case 1:
+            scheme = .monochromatic
+        case 2:
+            scheme = .complementary
+        default:
+            scheme = .analogous
+        }
+        
+    }
+    
+    
     
     
     // MARK: - Saving Sketch Data
@@ -437,17 +601,23 @@ class ViewController: UIViewController, PKCanvasViewDelegate, PKToolPickerObserv
                         let colorScheme = try ColorSchemes(snapshot: data)
                         
                         // get all the sketches in the sketches array from database
-                        guard var sketches = colorScheme.sketches else { return }
-                        
-                        if sketches.count > 0 {
-                            // update
-                            sketches[self.sketch] = urlString
+                        if var sketches = colorScheme.sketches {
+                            if sketches.count > 0 {
+                                // update
+                                sketches[self.sketch] = urlString
 
-                            self.db.collection(collectionRef).document(self.colorScheme).updateData(["sketches" : sketches])
-                        } else {
+                                self.db.collection(collectionRef).document(self.colorScheme).updateData(["sketches" : sketches])
+                            }
+                            else {
+                                // add new sketch to database
+                                self.db.collection(collectionRef).document(self.colorScheme).updateData(["sketches" : FieldValue.arrayUnion([urlString])])
+                            }
+                        }
+                        else {
                             // add new sketch to database
                             self.db.collection(collectionRef).document(self.colorScheme).updateData(["sketches" : FieldValue.arrayUnion([urlString])])
                         }
+                        
                         
                     } catch {
                         print("NO DATA: \(error.localizedDescription)")

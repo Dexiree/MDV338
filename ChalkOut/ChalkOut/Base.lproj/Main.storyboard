@@ -93,7 +93,10 @@
                         <outlet property="Popup" destination="FkU-qz-wV9" id="neN-fk-1aO"/>
                         <outlet property="canvasView" destination="7eN-jp-zlT" id="Akh-BW-NBJ"/>
                         <outlet property="colorEdit" destination="r3t-u7-Vhi" id="N5P-wr-2HT"/>
+                        <outlet property="lockedBtn" destination="iwc-X8-yyk" id="hYD-4E-38c"/>
                         <outlet property="pallete" destination="iTV-MC-Xdt" id="gvF-2x-kcP"/>
+                        <outlet property="refColorLabel" destination="eAJ-AF-6GW" id="xQU-kg-kqk"/>
+                        <outlet property="refColorSwitch" destination="2ng-q1-fua" id="90J-MQ-7iY"/>
                         <outlet property="vStack" destination="a6R-eM-Pic" id="nWA-i9-dQP"/>
                     </connections>
                 </viewController>
@@ -108,7 +111,7 @@
                     <blurEffect style="regular"/>
                 </visualEffectView>
                 <view contentMode="scaleToFill" id="FkU-qz-wV9" userLabel="Settings">
-                    <rect key="frame" x="0.0" y="0.0" width="465" height="396"/>
+                    <rect key="frame" x="0.0" y="0.0" width="465" height="110"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Au1-VS-iva">
@@ -121,11 +124,15 @@
                             </connections>
                         </button>
                         <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vg5-hJ-g5I">
-                            <rect key="frame" x="320" y="44" width="125" height="32"/>
+                            <rect key="frame" x="92" y="44" width="353" height="32"/>
                             <segments>
-                                <segment title="Palette"/>
-                                <segment title="Sheets"/>
+                                <segment title="Analogous"/>
+                                <segment title="Monochromatic"/>
+                                <segment title="Complementary"/>
                             </segments>
+                            <connections>
+                                <action selector="ColorTheorySegmented:" destination="BYZ-38-t0r" eventType="valueChanged" id="2Xf-pb-W4u"/>
+                            </connections>
                         </segmentedControl>
                     </subviews>
                     <viewLayoutGuide key="safeArea" id="sTD-YC-H2m"/>
@@ -170,9 +177,18 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iwc-X8-yyk">
                             <rect key="frame" x="266" y="106.5" width="191" height="31"/>
-                            <color key="tintColor" systemColor="systemYellowColor"/>
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="filled" image="lock.fill" catalog="system" title="  Lock"/>
+                            <buttonConfiguration key="configuration" style="filled" image="lock.open" catalog="system">
+                                <attributedString key="attributedTitle">
+                                    <fragment content="  Unlocked">
+                                        <attributes>
+                                            <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <font key="NSFont" size="12" name="Helvetica"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                            </buttonConfiguration>
                             <connections>
                                 <action selector="LockEdit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NOb-Hy-gPv"/>
                             </connections>
@@ -185,6 +201,18 @@
                                 <action selector="CloseEdit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="J3T-gk-hHP"/>
                             </connections>
                         </button>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="Reference" translatesAutoresizingMaskIntoConstraints="NO" id="2ng-q1-fua">
+                            <rect key="frame" x="266" y="52.5" width="51" height="31"/>
+                            <connections>
+                                <action selector="toggleReference:" destination="BYZ-38-t0r" eventType="valueChanged" id="uxD-T8-iOz"/>
+                            </connections>
+                        </switch>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reference Color" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eAJ-AF-6GW">
+                            <rect key="frame" x="334" y="57.5" width="123" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <viewLayoutGuide key="safeArea" id="ww9-z0-vYU"/>
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -194,13 +222,17 @@
                         <constraint firstItem="ww9-z0-vYU" firstAttribute="bottom" secondItem="r3t-u7-Vhi" secondAttribute="bottom" constant="20" id="5pk-od-C26"/>
                         <constraint firstItem="NOx-qb-31f" firstAttribute="top" secondItem="iwc-X8-yyk" secondAttribute="bottom" constant="20" id="7CP-hp-Frr"/>
                         <constraint firstItem="bLa-Un-GHZ" firstAttribute="top" secondItem="NOx-qb-31f" secondAttribute="bottom" constant="20" id="9W6-eW-W28"/>
+                        <constraint firstItem="2ng-q1-fua" firstAttribute="top" secondItem="r3t-u7-Vhi" secondAttribute="top" id="Awt-1B-uiu"/>
+                        <constraint firstItem="eAJ-AF-6GW" firstAttribute="centerY" secondItem="2ng-q1-fua" secondAttribute="centerY" id="JX3-8e-LZI"/>
                         <constraint firstItem="ObI-Sg-7Tw" firstAttribute="centerY" secondItem="IWQ-2j-16K" secondAttribute="centerY" id="Kj8-FU-TBQ"/>
                         <constraint firstItem="ObI-Sg-7Tw" firstAttribute="trailing" secondItem="iwc-X8-yyk" secondAttribute="trailing" id="OzQ-iI-Aff"/>
+                        <constraint firstItem="2ng-q1-fua" firstAttribute="leading" secondItem="iwc-X8-yyk" secondAttribute="leading" id="VF3-li-ENh"/>
                         <constraint firstItem="ww9-z0-vYU" firstAttribute="trailing" secondItem="ObI-Sg-7Tw" secondAttribute="trailing" constant="20" id="WWh-zv-0Kg"/>
                         <constraint firstItem="IWQ-2j-16K" firstAttribute="centerX" secondItem="ww9-z0-vYU" secondAttribute="centerX" id="Wyo-LC-mwn"/>
                         <constraint firstItem="NOx-qb-31f" firstAttribute="centerY" secondItem="r3t-u7-Vhi" secondAttribute="centerY" id="XfC-eE-pAq"/>
                         <constraint firstItem="r3t-u7-Vhi" firstAttribute="width" secondItem="nCC-76-D2s" secondAttribute="width" multiplier="0.5" id="aFQ-LV-vub"/>
                         <constraint firstItem="ObI-Sg-7Tw" firstAttribute="top" secondItem="nCC-76-D2s" secondAttribute="top" constant="11" id="cMD-jU-CEd"/>
+                        <constraint firstItem="eAJ-AF-6GW" firstAttribute="trailing" secondItem="iwc-X8-yyk" secondAttribute="trailing" id="ce0-iu-xAh"/>
                         <constraint firstItem="ObI-Sg-7Tw" firstAttribute="trailing" secondItem="bLa-Un-GHZ" secondAttribute="trailing" id="eKM-un-8r4"/>
                         <constraint firstItem="ObI-Sg-7Tw" firstAttribute="trailing" secondItem="nCC-76-D2s" secondAttribute="trailingMargin" id="tG0-LK-jO6"/>
                         <constraint firstItem="iwc-X8-yyk" firstAttribute="width" secondItem="NOx-qb-31f" secondAttribute="width" id="tHd-Fp-Jn2"/>
@@ -450,7 +482,7 @@
     <resources>
         <image name="doc.on.doc.fill" catalog="system" width="116" height="128"/>
         <image name="gearshape.fill" catalog="system" width="128" height="121"/>
-        <image name="lock.fill" catalog="system" width="128" height="128"/>
+        <image name="lock.open" catalog="system" width="128" height="110"/>
         <image name="person.circle" catalog="system" width="128" height="121"/>
         <image name="person.fill" catalog="system" width="128" height="120"/>
         <image name="plus" catalog="system" width="128" height="113"/>
@@ -464,9 +496,6 @@
         </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemYellowColor">
-            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

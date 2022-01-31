@@ -7,65 +7,33 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E001F1D7-0894-4AAC-9B96-C7B81DB938C3"
+            uuid = "E18F3177-9AAA-49A5-90F8-8FBFD5372724"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChalkOut/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "429"
-            endingLineNumber = "429"
-            landmarkName = "saveSketch(data:)"
+            startingLineNumber = "520"
+            endingLineNumber = "520"
+            landmarkName = "toggleReference(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "DCA7F4CF-0228-4DD7-B891-67E9838E912C"
+            uuid = "400EA390-4935-417A-9D9D-1F6C5CBB96B0"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChalkOut/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "430"
-            endingLineNumber = "430"
-            landmarkName = "saveSketch(data:)"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
+            landmarkName = "LoadData()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "DCA7F4CF-0228-4DD7-B891-67E9838E912C - c67486eed562ee81"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Foundation.URL&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRStorageMetadata&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ChalkOut.ViewController.saveSketch(data: Foundation.Data) -&gt; ()"
-                  moduleName = "ChalkOut"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dexiree/Documents/GitHub/MDV338/ChalkOut/ChalkOut/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "428"
-                  endingLineNumber = "428"
-                  offsetFromSymbolStart = "262">
-               </Location>
-               <Location
-                  uuid = "DCA7F4CF-0228-4DD7-B891-67E9838E912C - c67486eed562ee81"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;__C.FIRDocumentSnapshot&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;Foundation.URL&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (Swift.Optional&lt;__C.FIRStorageMetadata&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in ChalkOut.ViewController.saveSketch(data: Foundation.Data) -&gt; ()"
-                  moduleName = "ChalkOut"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dexiree/Documents/GitHub/MDV338/ChalkOut/ChalkOut/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "428"
-                  endingLineNumber = "428"
-                  offsetFromSymbolStart = "297">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
